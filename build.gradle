@@ -1,0 +1,146 @@
+/*
+ * Copyright 2011- the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+apply plugin: 'groovy'
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+version = '2.0' //TODO: remove this. Ironic isn't it...
+group = 'ish.gradle'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile gradleApi()
+    compile 'org.tmatesoft.svnkit:svnkit:1.7.5'
+    groovy 'org.codehaus.groovy:groovy-all:1.8.4'
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+     classifier = 'sources'
+     from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+     classifier = 'javadoc'
+     from javadoc.destinationDir
+}
+
+artifacts {
+     archives sourcesJar
+     archives javadocJar
+}
+
+signing {
+    required = { gradle.taskGraph.hasTask("uploadArchives") && !version.endsWith("SNAPSHOT") }
+    sign configurations.archives
+}
+
+defaultProject = {
+    name 'Gradle Release plugin'
+    // packaging 'jar' (Packaging is set later through direct modification of the xml)
+    description 'The Gradle Release plugin.'
+    url 'http://github.com/ari/gradle-release-plugin'
+    inceptionYear '2011'
+
+    scm {
+        developerConnection 'git@github.com:ari/gradle-release-plugin.git'
+        connection 'git://github.com/ari/gradle-release-plugin.git'
+        url 'https://github.com/ari/gradle-release-plugin'
+    }
+
+    licenses {
+        license {
+            name 'The Apache Software License, Version 2.0'
+            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+            distribution 'repo'
+        }
+    }
+
+    developers {
+        developer {
+            id 'stianh'
+            name 'Stian Hegglund'
+            email 'stian.hegglund@gmail.com'
+            roles {
+                role 'Developer'
+            }
+            timezone '+1'
+        }
+        developer {
+            id 'mkrabset'
+            name 'Marius Krabset'
+            email 'marius.krabset@gmail.com'
+            roles {
+                role 'Developer'
+            }
+            timezone '+1'
+        }
+        developer {
+            id 'stigkj'
+            name 'Stig Kleppe-Jørgensen'
+            email 'from.gradle-release@nisgits.net'
+            roles {
+                role 'Developer'
+            }
+            timezone '+1'
+        }
+        developer {
+            id 'ari'
+            name 'Ari Maniatis'
+            email 'ari@ish.com.au'
+            roles {
+                role 'Developer'
+            }
+            timezone '+10'
+        }
+    }
+}
+
+fixedProject = {
+    project defaultProject
+    withXml {
+        def project = it.asNode()
+        project.version[0] + {
+            packaging 'jar'
+        }
+    }
+}
+
+uploadArchives.repositories.mavenDeployer {
+    uniqueVersion = false
+
+    if (!project.hasProperty('sonatypeUsername')) sonatypeUsername = ''
+    if (!project.hasProperty('sonatypePassword')) sonatypePassword = ''
+
+    snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+        authentication(userName: sonatypeUsername, password: sonatypePassword)
+    }
+
+    repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+        authentication(userName: sonatypeUsername, password: sonatypePassword)
+    }
+}
+
+installer = install.repositories.mavenInstaller
+deployer = uploadArchives.repositories.mavenDeployer
+
+[installer, deployer]*.pom fixedProject
+
+[installer, deployer]*.beforeDeployment {
+    signPom(it)
+}
