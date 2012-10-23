@@ -21,87 +21,67 @@ version = '2.0' //TODO: remove this. Ironic isn't it...
 group = 'ish.gradle'
 
 repositories {
-    mavenCentral()
+	mavenCentral()
 }
 
 dependencies {
-    compile gradleApi()
-    compile 'org.tmatesoft.svnkit:svnkit:1.7.5'
-    groovy 'org.codehaus.groovy:groovy-all:1.8.4'
+	compile gradleApi()
+	compile 'org.tmatesoft.svnkit:svnkit:1.7.5'
+	groovy 'org.codehaus.groovy:groovy-all:1.8.4'
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
-     classifier = 'sources'
-     from sourceSets.main.allSource
+	 classifier = 'sources'
+	 from sourceSets.main.allSource
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
-     classifier = 'javadoc'
-     from javadoc.destinationDir
+	 classifier = 'javadoc'
+	 from javadoc.destinationDir
 }
 
 artifacts {
-     archives sourcesJar
-     archives javadocJar
+	 archives sourcesJar
+	 archives javadocJar
 }
 
 signing {
-    required = { gradle.taskGraph.hasTask("uploadArchives") && !version.endsWith("SNAPSHOT") }
-    sign configurations.archives
-}
-
-defaultProject = {
-    name 'Gradle Release plugin'
-    // packaging 'jar' (Packaging is set later through direct modification of the xml)
-    description 'The Gradle Release plugin.'
-    url 'http://github.com/ari/gradle-release-plugin'
-    inceptionYear '2011'
-
-    scm {
-        developerConnection 'git@github.com:ari/gradle-release-plugin.git'
-        connection 'git://github.com/ari/gradle-release-plugin.git'
-        url 'https://github.com/ari/gradle-release-plugin'
-    }
-
-    licenses {
-        license {
-            name 'The Apache Software License, Version 2.0'
-            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-            distribution 'repo'
-        }
-    }
-}
-
-fixedProject = {
-    project defaultProject
-    withXml {
-        def project = it.asNode()
-        project.version[0] + {
-            packaging 'jar'
-        }
-    }
+	required = { gradle.taskGraph.hasTask("uploadArchives") && !version.endsWith("SNAPSHOT") }
+	sign configurations.archives
 }
 
 uploadArchives.repositories.mavenDeployer {
-    uniqueVersion = false
+	uniqueVersion = false
 
-    if (!project.hasProperty('sonatypeUsername')) sonatypeUsername = ''
-    if (!project.hasProperty('sonatypePassword')) sonatypePassword = ''
+	beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-    snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-        authentication(userName: sonatypeUsername, password: sonatypePassword)
-    }
+	snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+		authentication(userName: sonatypeUsername, password: sonatypePassword)
+	}
 
-    repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-        authentication(userName: sonatypeUsername, password: sonatypePassword)
-    }
-}
+	repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+		authentication(userName: sonatypeUsername, password: sonatypePassword)
+	}
 
-installer = install.repositories.mavenInstaller
-deployer = uploadArchives.repositories.mavenDeployer
+	pom.project {
+		name 'Gradle Release plugin'
+		packaging 'jar'
+		description 'The Gradle Release plugin.'
+		url 'http://github.com/ari/gradle-release-plugin'
+		inceptionYear '2012'
 
-[installer, deployer]*.pom fixedProject
+		scm {
+			developerConnection 'git@github.com:ari/gradle-release-plugin.git'
+			connection 'git://github.com/ari/gradle-release-plugin.git'
+			url 'https://github.com/ari/gradle-release-plugin'
+		}
 
-[installer, deployer]*.beforeDeployment {
-    signPom(it)
+		licenses {
+			license {
+				name 'The Apache Software License, Version 2.0'
+				url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+				distribution 'repo'
+			}
+		}
+	}
 }
