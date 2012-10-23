@@ -1,5 +1,5 @@
 /*
- * Copyright 2011- the original author or authors.
+ * Copyright 2012 ish group pty ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,45 +68,6 @@ defaultProject = {
             name 'The Apache Software License, Version 2.0'
             url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
             distribution 'repo'
-        }
-    }
-
-    developers {
-        developer {
-            id 'stianh'
-            name 'Stian Hegglund'
-            email 'stian.hegglund@gmail.com'
-            roles {
-                role 'Developer'
-            }
-            timezone '+1'
-        }
-        developer {
-            id 'mkrabset'
-            name 'Marius Krabset'
-            email 'marius.krabset@gmail.com'
-            roles {
-                role 'Developer'
-            }
-            timezone '+1'
-        }
-        developer {
-            id 'stigkj'
-            name 'Stig Kleppe-Jørgensen'
-            email 'from.gradle-release@nisgits.net'
-            roles {
-                role 'Developer'
-            }
-            timezone '+1'
-        }
-        developer {
-            id 'ari'
-            name 'Ari Maniatis'
-            email 'ari@ish.com.au'
-            roles {
-                role 'Developer'
-            }
-            timezone '+10'
         }
     }
 }
