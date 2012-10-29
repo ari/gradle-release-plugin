@@ -83,5 +83,25 @@ uploadArchives.repositories.mavenDeployer {
 				distribution 'repo'
 			}
 		}
+		developers {
+			developer {
+				id 'ari'
+				name 'Ari Maniatis'
+				email 'ari@ish.com.au'
+				roles {
+					role 'Developer'
+				}
+				timezone '+10'
+			}
+			developer {
+				id 'marcin'
+				name 'Marcin Skladaniec'
+				email 'marcin@ish.com.au'
+				roles {
+					role 'Developer'
+				}
+				timezone '+10'
+			}
+		}
 	}
 }
