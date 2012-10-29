@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ish.gradle
+package au.com.ish.gradle
 
 abstract public class SCMService {
 	private final def releaseTagPattern = ~/^(\S+)-REL-(\d+)$/

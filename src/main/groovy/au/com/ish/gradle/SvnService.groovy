@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ish.gradle
+package au.com.ish.gradle
 
-import ish.gradle.SCMService
+import au.com.ish.gradle.SCMService
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.tmatesoft.svn.core.SVNDirEntry

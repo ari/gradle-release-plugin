@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ish.gradle
+package au.com.ish.gradle
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -26,8 +26,7 @@ import static org.junit.Assert.*
 
 import org.gradle.testfixtures.ProjectBuilder
 
-import ish.gradle.TestService
-import ish.gradle.*
+import au.com.ish.gradle.*
 
 import groovy.mock.interceptor.*
 import org.tmatesoft.svn.core.SVNException

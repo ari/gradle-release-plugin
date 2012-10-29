@@ -16,9 +16,9 @@
 
  /* This is a mock service used only for testing */
 
-package ish.gradle
+package au.com.ish.gradle
 
-import ish.gradle.SCMService
+import au.com.ish.gradle.SCMService
 import org.gradle.api.Project
 
 class TestService extends SCMService {

@@ -17,8 +17,8 @@ apply plugin: 'groovy'
 apply plugin: 'maven'
 apply plugin: 'signing'
 
-version = '2.0' //TODO: remove this. Ironic isn't it...
-group = 'ish.gradle'
+version = '2.0-SNAPSHOT' //TODO: remove this. Ironic isn't it...
+group = 'au.com.ish.gradle'
 
 repositories {
 	mavenCentral()

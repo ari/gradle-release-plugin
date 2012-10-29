@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ish.gradle
+package au.com.ish.gradle
 
-import ish.gradle.ReleasePlugin
+import au.com.ish.gradle.ReleasePlugin
 
 class ReleasePluginExtension {
   private boolean failOnSnapshotDependencies = true

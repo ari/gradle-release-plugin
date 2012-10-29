@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ish.gradle
+package au.com.ish.gradle
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -108,7 +108,7 @@ class ReleasePlugin implements Plugin<Project> {
         try {
             // capitalise the first letter
             def className = project.release.scm[0].toUpperCase() + project.release.scm[1..-1] + "Service"
-            c = this.getClass().classLoader.loadClass("ish.gradle." + className)
+            c = this.getClass().classLoader.loadClass("au.com.ish.gradle." + className)
         } catch (all) {
             throw new GradleException("Your value of scm = '${project.release.scm}' is invalid. Possible options are 'git' or 'svn'")
         }
