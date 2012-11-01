@@ -16,6 +16,7 @@
 package au.com.ish.gradle
 
 import org.gradle.api.Project
+import org.gradle.api.tasks.Exec
 
 import au.com.ish.gradle.SCMService
 import org.gradle.api.GradleException
@@ -99,7 +100,7 @@ class GitService extends SCMService {
     def private gitExec(List gitArgs) {
         def stdout = new ByteArrayOutputStream()
 
-        exec {
+        project.exec {
             executable = 'git'
             args = gitArgs
             standardOutput = stdout

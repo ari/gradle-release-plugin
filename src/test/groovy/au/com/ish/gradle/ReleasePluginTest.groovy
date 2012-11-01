@@ -19,6 +19,7 @@ package au.com.ish.gradle
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
+import org.gradle.api.tasks.Exec;
 
 import org.junit.Test
 import org.junit.Before
@@ -71,6 +72,20 @@ class ReleasePluginTest {
 	@Test
 	public void checkSCMversion() {
 		assert project.release.scmVersion == "abc"
+	}
+
+	//verifies if the exec env is available
+	@Test
+	public void testExec() {
+		def stdout = new ByteArrayOutputStream()
+
+        project.exec {
+            executable = 'env'
+        }
+
+        if (stdout.toByteArray().length > 0) {
+            println stdout.toString()
+        } 
 	}
 
 }
