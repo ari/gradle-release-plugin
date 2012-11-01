@@ -13,11 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+ buildscript {
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+        classpath 'au.com.ish.gradle:release:2.0'
+	}
+}
+
 apply plugin: 'groovy'
 apply plugin: 'maven'
 apply plugin: 'signing'
 
-version = '2.0-SNAPSHOT' //TODO: remove this. Ironic isn't it...
+apply plugin: 'release'
+release {
+    //use subversion scm, unless otherwise specified in with -PscmFlavour= or in users gradle properties
+    scm = project.hasProperty('scmFlavour') ? project.scmFlavour:'svn'
+    failOnSnapshotDependencies = true
+
+    //properties for svn access
+    username = project.hasProperty('username') ? project.username : ''
+    password = project.hasProperty('password') ? project.password : ''
+
+    //the following two params have to be converted from string to boolean
+    releaseDryRun = project.hasProperty('releaseDryRun') ? project.releaseDryRun=='true' : ''
+    allowLocalModifications = project.hasProperty('allowLocalModifications') ? project.allowLocalModifications='true' : ''
+}
+
 group = 'au.com.ish.gradle'
 
 repositories {
