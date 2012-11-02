@@ -41,6 +41,7 @@ release {
     releaseDryRun = project.hasProperty('releaseDryRun') ? project.releaseDryRun=='true' : ''
     allowLocalModifications = project.hasProperty('allowLocalModifications') ? project.allowLocalModifications='true' : ''
 }
+version = release.projectVersion
 
 group = 'au.com.ish.gradle'
 
