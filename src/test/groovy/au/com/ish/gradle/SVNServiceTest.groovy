@@ -32,7 +32,7 @@ class SvnServiceTest {
     @Test
     public void testOnTag() {
         TestSvnService service = new TestSvnService()
-        service.setSCMRemoteURL("http://svn.ish.com.au/ish/willow/tags/10.0/admin")
+        service.setSCMRemoteURL("http://svn.ish.com.au/ish/willow/tags/admin/10.0")
         assert service.onTag() == true
         assert service.getBranchName() == "10.0"
 
@@ -45,7 +45,7 @@ class SvnServiceTest {
     @Test
     public void testOnBranch() {
         TestSvnService service = new TestSvnService()
-        service.setSCMRemoteURL("http://svn.ish.com.au/ish/willow/branches/stable/admin")
+        service.setSCMRemoteURL("http://svn.ish.com.au/ish/willow/branches/admin/stable")
         assert service.onTag() == false
         assert service.getBranchName() == "stable"
 
@@ -71,7 +71,7 @@ class SvnServiceTest {
     @Test
     public void testRootURLonTags() {
         TestSvnService service = new TestSvnService()
-        service.setSCMRemoteURL("http://svn.ish.com.au/ish/willow/tags/10.0/admin")
+        service.setSCMRemoteURL("http://svn.ish.com.au/ish/willow/tags/admin/10.0")
         assert service.getSvnRootURL() == "http://svn.ish.com.au/ish/willow"
 
         service.setSCMRemoteURL("http://svn.ish.com.au/ish/angel/tags/10.0")
@@ -82,7 +82,7 @@ class SvnServiceTest {
     @Test
     public void testRootURLonBranches() {
         TestSvnService service = new TestSvnService()
-        service.setSCMRemoteURL("http://svn.ish.com.au/ish/willow/branches/stable/admin")
+        service.setSCMRemoteURL("http://svn.ish.com.au/ish/willow/branches/admin/stable")
         assert service.getSvnRootURL() == "http://svn.ish.com.au/ish/willow"
 
         service.setSCMRemoteURL("http://svn.ish.com.au/ish/angel/branches/stable")
@@ -106,7 +106,7 @@ class SvnServiceTest {
     public void testCreateTagsUrlonTrunk() {
         TestSvnService service = new TestSvnService()
         service.setSCMRemoteURL("http://svn.ish.com.au/ish/willow/trunk/admin")
-        assert service.createTagsUrl("10.0").toDecodedString() == "http://svn.ish.com.au/ish/willow/tags/10.0/admin"
+        assert service.createTagsUrl("10.0").toDecodedString() == "http://svn.ish.com.au/ish/willow/tags/admin/10.0"
 
         service.setSCMRemoteURL("http://svn.ish.com.au/ish/angel/trunk")
          assert service.createTagsUrl("10.0").toDecodedString() == "http://svn.ish.com.au/ish/angel/tags/10.0"
@@ -116,8 +116,8 @@ class SvnServiceTest {
     @Test
     public void testCreateTagsUrlonBranch() {
         TestSvnService service = new TestSvnService()
-        service.setSCMRemoteURL("http://svn.ish.com.au/ish/willow/branches/stable/admin")
-        assert service.createTagsUrl("10.0").toDecodedString() == "http://svn.ish.com.au/ish/willow/tags/10.0/admin"
+        service.setSCMRemoteURL("http://svn.ish.com.au/ish/willow/branches/admin/stable")
+        assert service.createTagsUrl("10.0").toDecodedString() == "http://svn.ish.com.au/ish/willow/tags/admin/10.0"
 
         service.setSCMRemoteURL("http://svn.ish.com.au/ish/angel/branches/stable")
          assert service.createTagsUrl("10.0").toDecodedString() == "http://svn.ish.com.au/ish/angel/tags/10.0"
@@ -127,8 +127,8 @@ class SvnServiceTest {
     @Test
     public void testCreateTagsUrlonTags() {
         TestSvnService service = new TestSvnService()
-        service.setSCMRemoteURL("http://svn.ish.com.au/ish/willow/tags/10.0/admin")
-        assert service.createTagsUrl("10.0.1").toDecodedString() == "http://svn.ish.com.au/ish/willow/tags/10.0.1/admin"
+        service.setSCMRemoteURL("http://svn.ish.com.au/ish/willow/tags/admin/10.0")
+        assert service.createTagsUrl("10.0.1").toDecodedString() == "http://svn.ish.com.au/ish/willow/tags/admin/10.0.1"
 
         service.setSCMRemoteURL("http://svn.ish.com.au/ish/angel/tags/10.0")
          assert service.createTagsUrl("10.0.1").toDecodedString() == "http://svn.ish.com.au/ish/angel/tags/10.0.1"

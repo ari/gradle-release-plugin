@@ -131,17 +131,19 @@ class SvnService extends SCMService {
     
     def String getBranchName() {
         // if svn URL contains "/tags/", then find the name of the branch
-        if (getSCMRemoteURL().contains("/tags/")) {
+        if (onTag()) {
             List splitPath = Arrays.asList(getSCMRemoteURL().split("/"))
             assert(splitPath.indexOf("tags") > 0)
-            return splitPath.get(splitPath.indexOf("tags")+1)
+            assert(splitPath.indexOf("tags") < splitPath.size()-1)
+            return splitPath.get(splitPath.size()-1)
         }
 
         // if svn URL contains "/branches/", then find the name of the branch
         if (getSCMRemoteURL().contains("/branches/")) {
             List splitPath = Arrays.asList(getSCMRemoteURL().split("/"))
             assert(splitPath.indexOf("branches") > 0)
-            return splitPath.get(splitPath.indexOf("branches")+1)
+            assert(splitPath.indexOf("branches") < splitPath.size()-1)
+            return splitPath.get(splitPath.size()-1)
         }
         
         return "trunk"
@@ -167,7 +169,7 @@ class SvnService extends SCMService {
         // root url to use for tagging
         def SVNURL rootURL = SVNURL.parseURIDecoded(getSvnRootURL())
 
-        def SVNURL tagsURL = rootURL.appendPath("tags",false).appendPath(tag,false)
+        def SVNURL tagsURL = rootURL.appendPath("tags",false)
 
         // need to preseve the path elements after 'branches'/'tags'/'trunk' and the branch name
         String urlTail = getSCMRemoteURL().replace(getSvnRootURL(),"").replace("branches", "").replace("tags", "").replace(getBranchName(), "")
@@ -179,6 +181,9 @@ class SvnService extends SCMService {
                 tagsURL = tagsURL.appendPath(pathElement, false);
             }
         }
+        
+        tagsURL = tagsURL.appendPath(tag,false)
+
         return tagsURL
     }
 
