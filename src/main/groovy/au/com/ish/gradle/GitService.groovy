@@ -24,7 +24,10 @@ import org.gradle.process.internal.ExecException
 
 class GitService extends SCMService {
 
+    def private Project project
+
     def GitService(Project project) {
+        this.project = project;
     }
 
     def boolean localIsAheadOfRemote() {

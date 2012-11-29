@@ -16,10 +16,14 @@
 
  buildscript {
 	repositories {
+		maven {
+			// this is useful to be able to release this plugin against a snapshot version of itself
+        	url 'https://oss.sonatype.org/content/repositories/snapshots'
+    	}
 		mavenCentral()
 	}
 	dependencies {
-        classpath 'au.com.ish.gradle:release:2.0'
+        classpath 'au.com.ish.gradle:release:2.1-SNAPSHOT'
 	}
 }
 
