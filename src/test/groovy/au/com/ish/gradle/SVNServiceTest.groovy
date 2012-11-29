@@ -99,4 +99,38 @@ class SvnServiceTest {
         service.setSCMRemoteURL("http://svn.ish.com.au/ish/angel/trunk")
         assert service.getSvnRootURL() == "http://svn.ish.com.au/ish/angel"
     }
+
+
+    // tests creating tag url from url with 'trunk'
+    @Test
+    public void testCreateTagsUrlonTrunk() {
+        TestSvnService service = new TestSvnService()
+        service.setSCMRemoteURL("http://svn.ish.com.au/ish/willow/trunk/admin")
+        assert service.createTagsUrl("10.0").toDecodedString() == "http://svn.ish.com.au/ish/willow/tags/10.0/admin"
+
+        service.setSCMRemoteURL("http://svn.ish.com.au/ish/angel/trunk")
+         assert service.createTagsUrl("10.0").toDecodedString() == "http://svn.ish.com.au/ish/angel/tags/10.0"
+    }
+
+    // tests creating tag url from url with 'branches'
+    @Test
+    public void testCreateTagsUrlonBranch() {
+        TestSvnService service = new TestSvnService()
+        service.setSCMRemoteURL("http://svn.ish.com.au/ish/willow/branches/stable/admin")
+        assert service.createTagsUrl("10.0").toDecodedString() == "http://svn.ish.com.au/ish/willow/tags/10.0/admin"
+
+        service.setSCMRemoteURL("http://svn.ish.com.au/ish/angel/branches/stable")
+         assert service.createTagsUrl("10.0").toDecodedString() == "http://svn.ish.com.au/ish/angel/tags/10.0"
+    }
+
+    // tests creating tag url from url with 'tags'
+    @Test
+    public void testCreateTagsUrlonTags() {
+        TestSvnService service = new TestSvnService()
+        service.setSCMRemoteURL("http://svn.ish.com.au/ish/willow/tags/10.0/admin")
+        assert service.createTagsUrl("10.0.1").toDecodedString() == "http://svn.ish.com.au/ish/willow/tags/10.0.1/admin"
+
+        service.setSCMRemoteURL("http://svn.ish.com.au/ish/angel/tags/10.0")
+         assert service.createTagsUrl("10.0.1").toDecodedString() == "http://svn.ish.com.au/ish/angel/tags/10.0.1"
+    }
 }

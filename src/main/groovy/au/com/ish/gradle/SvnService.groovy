@@ -160,12 +160,32 @@ class SvnService extends SCMService {
         return max.name
     }  
 
-    def performTagging(String tag, String message) {
-        project.logger.info("Tagging release: $tag")
-
+    /**
+    * creates a url for the new tag
+    */
+    def SVNURL createTagsUrl(String tag) {
+        // root url to use for tagging
         def SVNURL rootURL = SVNURL.parseURIDecoded(getSvnRootURL())
 
-        def tagsURL = rootURL.appendPath("tags",false).appendPath(tag,false)
+        def SVNURL tagsURL = rootURL.appendPath("tags",false).appendPath(tag,false)
+
+        // need to preseve the path elements after 'branches'/'tags'/'trunk' and the branch name
+        String urlTail = getSCMRemoteURL().replace(getSvnRootURL(),"").replace("branches", "").replace("tags", "").replace(getBranchName(), "")
+
+        println("urltail "+ urlTail)
+        List splitUrlTail = Arrays.asList(urlTail.split("/"))
+        for (String pathElement : splitUrlTail) {
+            if (pathElement.length() > 0) {
+                tagsURL = tagsURL.appendPath(pathElement, false);
+            }
+        }
+        return tagsURL
+    }
+
+    def performTagging(String tag, String message) {
+        project.logger.info("Tagging release: $tag")
+        
+        def tagsURL = createTagsUrl(tag)
         
         //javadoc helper :
         //doCopy(SVNCopySource[] sources, SVNURL dst, 
