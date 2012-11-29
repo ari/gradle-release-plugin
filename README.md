@@ -1,19 +1,27 @@
-#Gradle release plugin (Git and Subversion) [![Build Status](http://travis-ci.org/ari/gradle-release-plugin.png?branch=develop)](http://travis-ci.org/ari/gradle-release-plugin)
+# Gradle release plugin (Git and Subversion) [![Build Status](http://travis-ci.org/ari/gradle-release-plugin.png?branch=master)](http://travis-ci.org/ari/gradle-release-plugin)
 
-Gradle releases made easy. Other release processes make you store your versioning information inside the project; this plugin keeps versions where they belong, in your version control system. We currently support subversion or git. Additional SCM options are easy to add.
+Gradle releases made easy. Other release processes make you store your versioning information inside the project; this plugin keeps versions where they belong, in your version control system. We currently support subversion or git. Additional SCM choices are easy to add.
 
-## Version numbering
+This plugin doesn't try to take over your release management process. Instead it does two simple and clear things:
 
-Use this plugin to give your project a version number aligned to the branch or tag you are building from. In the case of a normal gradle build, the plugin generates a version name based on the current branch name like this:
+## 1. Version numbering
 
-    ${branchName}-SNAPSHOT
+Use this plugin to give your project a version number aligned to the branch or tag you are building from. In the case of a normal gradle build, the plugin generates a version name based on the current branch name.
 
-If you are building on a tag, this plugin will automatically detect that and use the tag name as the version.
+So let's say you are building a project in subversion and your working copy was checked out from https://svn.acme.com/project/trunk. In this case, the gradle property release.projectVersion will be set to 'trunk-SNAPSHOT'.
+
+If you are building code checked out from https://svn.acme.com/project/tags/1.2, release.projectVersion will be '1.2'. And if you are building from https://svn.acme.com/project/branches/big-refactor, the you'll get 'big-refactor-SNAPSHOT'.
+
+Git is even easier. There, you will have the version set to ${tagName} or ${branchName}-SNAPSHOT. No longer will you be chasing around changing the version in build.gradle as you make new branches or tag your code.
+
+At any time you can override the version number on the command line:
+
+     gradle assemble -PreleaseVersion=2.0-SNAPSHOT
 
 
-## Release management
+## 2. Release tagging
 
-Just run this to have the plugin automatically determine the next available version number, and create a tag.
+Just run this to have the plugin automatically guess the next available version number, and create a tag in your version control system of choice.
 
      gradle release
 
@@ -34,20 +42,15 @@ buildscript {
   }
 
   dependencies {
-    classpath 'ish.gradle:gradle-release-plugin:2.0'
+    classpath 'au.com.ish.gradle:release:2.0'
   }
 }
 
 apply plugin: 'release'
-release {
-  failOnSnapshotDependencies = true
-  scm = 'git'
-}
-
 version = release.projectVersion
 ````
 
-Most of the above is self-explanatory. Include the buildscript section to pull this plugin into your project. Apply the plugin, and then configure it by defining a handful of properties. The complete set of options looks like this:
+Most of the above is self-explanatory. Include the buildscript section to pull this plugin into your project. Apply the plugin, and set your project version to the version extracted from your version control system. You can pass further properties like this:
 
 ````
 release {
@@ -81,11 +84,11 @@ You can access two properties from this plugin once you have configured it:
   
   release.scmVersion
     Read only property for getting the version from the source control system.
-    This will return the svn commit number or the git hash for the current state of the local repository. This value may be useful for putting into the manifest file.
+    This will return the svn commit number or the git hash for the current state of the local repository. This value may be useful for putting into the manifest file of a Java project or since it can be more reliable (but not as pretty) as the public-facing version numbering.
 
 
 ## Tasks
 
-Many people will want to call their build task like this to upload their release artifacts.
+Many people will want to call their build task like this to build, test, tag and upload their release artifacts.
 
     gradle clean test release uploadArchives
