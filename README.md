@@ -47,10 +47,26 @@ release {
 version = release.projectVersion
 ````
 
-Most of the above is self-explanatory. Include the buildscript section to pull this plugin into your project. Apply the plugin, and then configure it by defining a handful of properties:
+Most of the above is self-explanatory. Include the buildscript section to pull this plugin into your project. Apply the plugin, and then configure it by defining a handful of properties. The complete set of options looks like this:
+
+````
+release {
+  failOnSnapshotDependencies = true
+  allowLocalModifications = false
+  releaseDryRun = false
+  scm = 'svn'
+  username = 'fred'
+  password = 'secret01'
+}
+````
 
 * failOnSnapshotDependencies: default is true. Will fail the release task if any dependency is currently pointing to a SNAPSHOT
+* allowLocalModifications: defaults to false. Will fail the release task if any uncommitted changes remain in your local version control. This prevents you from releasing a build which you cannot later reproduce because you don't have the complete set of source which went into the build.
+* releaseDryRun: this skips the commit of the tag to your version control system
 * scm: your choices here are 'git' or 'svn' and it defaults to 'svn'
+* username: a username for your version control system. This is mostly useful for running releases from a continuous integration server like Jenkins. If you don't pass this, the release plugin will take credentials from any cached on your system or prompt you for them.
+* password: a password to match the username
+* scmRoot: The path to your version control repository. This is not needed if you have a simple checkout of the trunk path and only one gradle project beneath that. Some people have different layouts and this hint is needed so that the release plugin knows where to make tags and look for branches. Only used for subversion.
 
 ## Properties
 
@@ -70,6 +86,6 @@ You can access two properties from this plugin once you have configured it:
 
 ## Tasks
 
-Many people will want to call their build task like this in order to upload their release artifacts.
+Many people will want to call their build task like this to upload their release artifacts.
 
-    gradle clean build release uploadArchives
+    gradle clean test release uploadArchives
