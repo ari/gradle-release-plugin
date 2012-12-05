@@ -1,10 +1,15 @@
-# Gradle release plugin (Git and Subversion) [![Build Status](http://travis-ci.org/ari/gradle-release-plugin.png?branch=master)](http://travis-ci.org/ari/gradle-release-plugin)
+# Gradle release plugin
+
+[![Build Status](http://travis-ci.org/ari/gradle-release-plugin.png)](http://travis-ci.org/ari/gradle-release-plugin)
 
 Gradle releases made easy. Other release processes make you store your versioning information inside the project; this plugin keeps versions where they belong, in your version control system. We currently support subversion or git. Additional SCM choices are easy to add.
 
 This plugin doesn't try to take over your release management process. Instead it does two simple and clear things:
 
-## 1. Version numbering
+
+## What this plugin does
+
+### 1. Version numbering
 
 Use this plugin to give your project a version number aligned to the branch or tag you are building from. In the case of a normal gradle build, the plugin generates a version name based on the current branch name.
 
@@ -19,7 +24,7 @@ At any time you can override the version number on the command line:
      gradle assemble -PreleaseVersion=2.0-SNAPSHOT
 
 
-## 2. Release tagging
+### 2. Release tagging
 
 Just run this to have the plugin automatically guess the next available version number, and create a tag in your version control system of choice.
 
@@ -31,7 +36,7 @@ Or this if you want to set the release version yourself.
 
 
 
-### Usage
+## Usage
 
 Add the following to your build.gradle file:
 
@@ -42,7 +47,7 @@ buildscript {
   }
 
   dependencies {
-    classpath 'au.com.ish.gradle:release:2.0'
+    classpath 'au.com.ish.gradle:release:2.1'
   }
 }
 
@@ -71,7 +76,7 @@ release {
 * password: a password to match the username
 * scmRoot: The path to your version control repository. This is not needed if you have a simple checkout of the trunk path and only one gradle project beneath that. Some people have different layouts and this hint is needed so that the release plugin knows where to make tags and look for branches. Only used for subversion.
 
-## Properties
+### Properties
 
 You can access two properties from this plugin once you have configured it:
 
@@ -87,8 +92,21 @@ You can access two properties from this plugin once you have configured it:
     This will return the svn commit number or the git hash for the current state of the local repository. This value may be useful for putting into the manifest file of a Java project or since it can be more reliable (but not as pretty) as the public-facing version numbering.
 
 
-## Tasks
+### Tasks
 
 Many people will want to call their build task like this to build, test, tag and upload their release artifacts.
 
     gradle clean test release uploadArchives
+
+
+## Release notes
+
+### 2.1 (3 December 2012)
+
+* Fixed some issues in the git execution commands which could prevent git from working properly
+* Now supports projects with subprojects and where you want to release just one of those subprojects
+
+### 2.0 (November 2012)
+
+* Our first public release of the plugin and a complete rewrite of the earlier 1.x series which we used internally.
+* Includes unit tests
