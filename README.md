@@ -47,7 +47,7 @@ buildscript {
   }
 
   dependencies {
-    classpath 'au.com.ish.gradle:release:2.1'
+    classpath 'au.com.ish.gradle:release:2.1.1'
   }
 }
 
@@ -100,6 +100,10 @@ Many people will want to call their build task like this to build, test, tag and
 
 
 ## Release notes
+
+### 2.1.1 (30 January 2013)
+
+* Update svnkit for a whole bunch of bug fixes against subversion repositories.
 
 ### 2.1 (3 December 2012)
 

@@ -23,7 +23,7 @@
 		mavenCentral()
 	}
 	dependencies {
-        classpath 'au.com.ish.gradle:release:2.1-SNAPSHOT'
+        classpath 'au.com.ish.gradle:release:2.1'
 	}
 }
 
@@ -55,7 +55,7 @@ repositories {
 
 dependencies {
 	compile gradleApi()
-	compile 'org.tmatesoft.svnkit:svnkit:1.7.5'
+	compile 'org.tmatesoft.svnkit:svnkit:1.7.8'
 	groovy 'org.codehaus.groovy:groovy-all:1.8.4'
 }
 
