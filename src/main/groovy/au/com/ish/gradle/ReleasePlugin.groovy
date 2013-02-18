@@ -21,6 +21,7 @@ import org.gradle.api.Task
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.Dependency
 import org.gradle.api.GradleException
+import org.gradle.api.tasks.testing.*
 
 class ReleasePlugin implements Plugin<Project> {
     private final String TASK_RELEASE = 'release'

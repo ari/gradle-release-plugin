@@ -47,7 +47,7 @@ buildscript {
   }
 
   dependencies {
-    classpath 'au.com.ish.gradle:release:2.1.1'
+    classpath 'au.com.ish.gradle:release:2.1.2'
   }
 }
 
@@ -101,6 +101,10 @@ Many people will want to call their build task like this to build, test, tag and
 
 ## Release notes
 
+### 2.1.2 (18 February 2013)
+
+* Fix problem introduced in 2.1 with releasing from the trunk branch using svn.
+
 ### 2.1.1 (30 January 2013)
 
 * Update svnkit for a whole bunch of bug fixes against subversion repositories.
@@ -114,3 +118,15 @@ Many people will want to call their build task like this to build, test, tag and
 
 * Our first public release of the plugin and a complete rewrite of the earlier 1.x series which we used internally.
 * Includes unit tests
+
+
+## Releasing to maven central
+
+These notes are for the developers of this plugin only.
+
+1. # gradle test
+2. Make sure all changes are committed
+2. # gradle uploadArchives
+3. Test the staged archives
+3. Go to https://oss.sonatype.org and log in. Choose 'staging repositories'
+4. Find the repository which starts com.ish... and "close" and then "release"

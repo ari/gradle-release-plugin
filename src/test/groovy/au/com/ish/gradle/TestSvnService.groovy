@@ -20,6 +20,7 @@ package au.com.ish.gradle
 
 import au.com.ish.gradle.SvnService
 import org.gradle.api.Project
+import org.tmatesoft.svn.core.SVNURL
 
 class TestSvnService extends SvnService {
 
@@ -28,8 +29,8 @@ class TestSvnService extends SvnService {
     def TestSvnService() {
     }
 
-    def String getSCMRemoteURL() {
-        return remoteURL
+    def SVNURL getSCMRemoteURL() {
+        return SVNURL.parseURIEncoded(remoteURL)
     }
 
     def setSCMRemoteURL(String remoteURL) {
