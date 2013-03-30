@@ -23,7 +23,7 @@
 		mavenCentral()
 	}
 	dependencies {
-        classpath 'au.com.ish.gradle:release:2.1'
+        classpath 'au.com.ish.gradle:release:2.1.2'
 	}
 }
 

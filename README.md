@@ -101,6 +101,10 @@ Many people will want to call their build task like this to build, test, tag and
 
 ## Release notes
 
+### 2.1.3 (29 March 2013)
+
+* Fix a problem where release tags were not created with the right name if the gradle build file was executed from a subproject folder, in a multi-project build where each subproject is released separately.
+
 ### 2.1.2 (18 February 2013)
 
 * Fix problem introduced in 2.1 with releasing from the trunk branch using svn.
@@ -126,7 +130,8 @@ These notes are for the developers of this plugin only.
 
 1. # gradle test
 2. Make sure all changes are committed
-2. # gradle uploadArchives
-3. Test the staged archives
-3. Go to https://oss.sonatype.org and log in. Choose 'staging repositories'
-4. Find the repository which starts com.ish... and "close" and then "release"
+3. # gradle release -PreleaseVersion=x.x.x uploadArchives
+4. Go to https://oss.sonatype.org and log in. Choose 'staging repositories'
+5. Find the repository which starts aucomish- and "close"
+6. Test the staged archives by clicking on the link and downloading the jars
+7. Press the "release" button

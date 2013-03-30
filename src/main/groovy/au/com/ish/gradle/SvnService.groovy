@@ -50,7 +50,7 @@ class SvnService extends SCMService {
 
     SvnService(Project project) {
         this.project = project;
-        project.logger.info("Creating SvnService")
+        project.logger.info("Creating SvnService for $project")
         //do some basic setup
         SVNRepositoryFactoryImpl.setup();
         FSRepositoryFactory.setup();
@@ -75,7 +75,7 @@ class SvnService extends SCMService {
         svnClientManager = SVNClientManager.newInstance(options, authManager);
 
         project.logger.info("Getting working copy status")
-        wcStatus = svnClientManager.getStatusClient().doStatus(project.rootDir,false)
+        wcStatus = svnClientManager.getStatusClient().doStatus(project.projectDir,false)
         project.logger.info("Got svn version: "+getSCMVersion())
 
         //not sure if the code below is required
@@ -172,6 +172,9 @@ class SvnService extends SCMService {
     * creates a url for the new tag
     */
     def SVNURL createTagsUrl(String tag) {
+        if (project != null) {
+            project.logger.info("$project, Crafting new tag: $tag")
+        }
         // root url to use for tagging
         def SVNURL rootURL = SVNURL.parseURIDecoded(getSvnRootURL())
 
@@ -180,21 +183,19 @@ class SvnService extends SCMService {
         // need to preseve the path elements after 'branches'/'tags'/'trunk' and the branch name
         String urlTail = getSCMRemoteURL().toString().replace(getSvnRootURL(),"").replace("branches", "").replace("tags", "").replace(getBranchName(), "")
 
-        println("urltail "+ urlTail)
         List splitUrlTail = Arrays.asList(urlTail.split("/"))
         for (String pathElement : splitUrlTail) {
             if (pathElement.length() > 0) {
                 tagsURL = tagsURL.appendPath(pathElement, false);
             }
         }
-        
         tagsURL = tagsURL.appendPath(tag,false)
 
         return tagsURL
     }
 
     def performTagging(String tag, String message) {
-        project.logger.info("Tagging release: $tag")
+        project.logger.info("$project, Tagging release: $tag")
         
         def tagsURL = createTagsUrl(tag)
         
@@ -206,7 +207,7 @@ class SvnService extends SCMService {
             [new SVNCopySource(SVNRevision.HEAD, SVNRevision.HEAD, wcStatus.URL)] as SVNCopySource[],
             tagsURL, 
             false, 
-            false, 
+            true, 
             true, 
             message,
             null)
