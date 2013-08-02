@@ -2,7 +2,7 @@
 
 [![Build Status](http://travis-ci.org/ari/gradle-release-plugin.png)](http://travis-ci.org/ari/gradle-release-plugin)
 
-Gradle releases made easy. Other release processes make you store your versioning information inside the project; this plugin keeps versions where they belong, in your version control system. We currently support subversion or git. Additional SCM choices are easy to add.
+Gradle releases made easy. Other release processes force you to store your versioning information inside the project files such as build.gradle; this plugin keeps versions where they belong, in your version control system. We currently support subversion or git. Additional SCM choices are easy to add.
 
 This plugin doesn't try to take over your release management process. Instead it does two simple and clear things:
 
@@ -11,13 +11,13 @@ This plugin doesn't try to take over your release management process. Instead it
 
 ### 1. Version numbering
 
-Use this plugin to give your project a version number aligned to the branch or tag you are building from. In the case of a normal gradle build, the plugin generates a version name based on the current branch name.
+Use this plugin to give your project a version number aligned to the branch or tag you are building from. The plugin generates a version name based on the current branch name.
 
 So let's say you are building a project in subversion and your working copy was checked out from https://svn.acme.com/project/trunk. In this case, the gradle property release.projectVersion will be set to 'trunk-SNAPSHOT'.
 
 If you are building code checked out from https://svn.acme.com/project/tags/1.2, release.projectVersion will be '1.2'. And if you are building from https://svn.acme.com/project/branches/big-refactor, the you'll get 'big-refactor-SNAPSHOT'.
 
-Git is even easier. There, you will have the version set to ${tagName} or ${branchName}-SNAPSHOT. No longer will you be chasing around changing the version in build.gradle as you make new branches or tag your code.
+Git is just the same. The version will automatically be set to the tag name or branch name. No longer will you be chasing around changing the version in build.gradle as you make new branches or tag your code.
 
 At any time you can override the version number on the command line:
 
@@ -47,17 +47,12 @@ buildscript {
   }
 
   dependencies {
-    classpath 'au.com.ish.gradle:release:2.1.2'
+    classpath 'au.com.ish.gradle:release:2.1.3'
   }
 }
 
 apply plugin: 'release'
-version = release.projectVersion
-````
 
-Most of the above is self-explanatory. Include the buildscript section to pull this plugin into your project. Apply the plugin, and set your project version to the version extracted from your version control system. You can pass further properties like this:
-
-````
 release {
   failOnSnapshotDependencies = true
   allowLocalModifications = false
@@ -66,12 +61,17 @@ release {
   username = 'fred'
   password = 'secret01'
 }
+version = release.projectVersion
 ````
+
+Most of the above is self-explanatory. Include the buildscript section to pull this plugin into your project. Apply the plugin, and set your project version from the output of this plugin. Make sure the above configuration is at the top build.gradle file.
+
+The options avilable are:
 
 * failOnSnapshotDependencies: default is true. Will fail the release task if any dependency is currently pointing to a SNAPSHOT
 * allowLocalModifications: defaults to false. Will fail the release task if any uncommitted changes remain in your local version control. This prevents you from releasing a build which you cannot later reproduce because you don't have the complete set of source which went into the build.
 * releaseDryRun: this skips the commit of the tag to your version control system
-* scm: your choices here are 'git' or 'svn' and it defaults to 'svn'
+* scm: your choices here are 'git' or 'svn'
 * username: a username for your version control system. This is mostly useful for running releases from a continuous integration server like Jenkins. If you don't pass this, the release plugin will take credentials from any cached on your system or prompt you for them.
 * password: a password to match the username
 * scmRoot: The path to your version control repository. This is not needed if you have a simple checkout of the trunk path and only one gradle project beneath that. Some people have different layouts and this hint is needed so that the release plugin knows where to make tags and look for branches. Only used for subversion.
