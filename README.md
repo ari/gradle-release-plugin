@@ -47,7 +47,7 @@ buildscript {
   }
 
   dependencies {
-    classpath 'au.com.ish.gradle:release:2.1.3'
+    classpath 'au.com.ish.gradle:release:2.2'
   }
 }
 
@@ -101,6 +101,10 @@ Many people will want to call their build task like this to build, test, tag and
 
 ## Release notes
 
+### 2.2 (25 August 2013)
+
+* Upgrade to svnkit alpha release so that we can support subversion 1.8 repositories
+
 ### 2.1.3 (29 March 2013)
 
 * Fix a problem where release tags were not created with the right name if the gradle build file was executed from a subproject folder, in a multi-project build where each subproject is released separately.
@@ -128,9 +132,9 @@ Many people will want to call their build task like this to build, test, tag and
 
 These notes are for the developers of this plugin only.
 
-1. # gradle test
+1. # ./gradlew test
 2. Make sure all changes are committed
-3. # gradle release -PreleaseVersion=x.x.x uploadArchives
+3. # ./gradlew release -PreleaseVersion=x.x.x uploadArchives
 4. Go to https://oss.sonatype.org and log in. Choose 'staging repositories'
 5. Find the repository which starts aucomish- and "close"
 6. Test the staged archives by clicking on the link and downloading the jars
