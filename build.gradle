@@ -59,7 +59,6 @@ repositories {
 dependencies {
 	compile gradleApi()
 	compile 'org.tmatesoft.svnkit:svnkit:1.8.0-SNAPSHOT'
-	groovy 'org.codehaus.groovy:groovy-all:1.8.4'
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
