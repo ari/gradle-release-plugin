@@ -1,4 +1,4 @@
 language: groovy
 jdk:
   - oraclejdk7
-script: "gradle test"
+script: "./gradlew test"
