@@ -51,11 +51,14 @@ group = 'au.com.ish.gradle'
 
 repositories {
 	mavenCentral()
+	maven {
+		url 'http://maven.tmatesoft.com/content/repositories/snapshots/'
+	}
 }
 
 dependencies {
 	compile gradleApi()
-	compile 'org.tmatesoft.svnkit:svnkit:1.7.8'
+	compile 'org.tmatesoft.svnkit:svnkit:1.8.0-SNAPSHOT'
 	groovy 'org.codehaus.groovy:groovy-all:1.8.4'
 }
 
