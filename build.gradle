@@ -35,7 +35,7 @@ apply plugin: 'release'
 release {
     //use subversion scm, unless otherwise specified in with -PscmFlavour= or in users gradle properties
     scm = project.hasProperty('scmFlavour') ? project.scmFlavour:'git'
-    failOnSnapshotDependencies = true
+    failOnSnapshotDependencies = false
 
     //properties for svn access
     username = project.hasProperty('username') ? project.username : ''
