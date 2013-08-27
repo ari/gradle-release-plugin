@@ -44,6 +44,9 @@ Add the following to your build.gradle file:
 buildscript {
   repositories {
     mavenCentral()
+    maven {
+      url 'http://maven.tmatesoft.com/content/repositories/snapshots/'
+    }
   }
 
   dependencies {
