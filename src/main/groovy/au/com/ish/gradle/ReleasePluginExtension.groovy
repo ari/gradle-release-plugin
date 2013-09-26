@@ -28,6 +28,7 @@ class ReleasePluginExtension {
   private boolean releaseDryRun = false
   private boolean allowLocalModifications = false
   private boolean prependSourceBranchToTag = true
+  private boolean switchToTagOnRelease = false
 
   public ReleasePluginExtension(ReleasePlugin plugin) {
     this.plugin = plugin
@@ -138,11 +139,33 @@ class ReleasePluginExtension {
     return allowLocalModifications
   }
 
+  /*
+    Get the previously set value for this property.
+   */
   boolean getPrependSourceBranchToTag() {
       return prependSourceBranchToTag
   }
 
+    /*
+       Whether or not to add the source branch to the beginning of the release tag name.
+       i.e. true would create trunk-RELEASE-1, false would create RELEASE-1.
+     */
   void setPrependSourceBranchToTag(boolean prependSourceBranchToTag) {
       this.prependSourceBranchToTag = prependSourceBranchToTag
+  }
+
+    /*
+    Get the previously set value for this property.
+   */
+  boolean getSwitchToTagOnRelease() {
+      return switchToTagOnRelease
+  }
+
+    /*
+    Whether or not to switch the workspace to the tag after creating it.  This can ensure that builds are run against the tag
+    instead of against the source branch which incidentally matches the tag.
+     */
+  void setSwitchToTagOnRelease(boolean switchToTagOnRelease) {
+      this.switchToTagOnRelease = switchToTagOnRelease
   }
 }

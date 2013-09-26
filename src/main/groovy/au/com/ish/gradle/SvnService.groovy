@@ -211,5 +211,11 @@ class SvnService extends SCMService {
             true, 
             message,
             null)
+
+        if(project.release.switchToTagOnRelease) {
+            //javadoc helper :
+            //doSwitch(File file, SVNURL url, SVNRevision revision, boolean recursive)
+            svnClientManager.getUpdateClient().doSwitch(project.rootDir, tagsURL, SVNRevision.HEAD, true)
+        }
     }
 }
