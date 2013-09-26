@@ -67,14 +67,25 @@ class ReleasePlugin implements Plugin<Project> {
                     if (extension.getReleaseDryRun()) {
                         project.logger.lifecycle("Scm would be tagged now, but releaseDryRun=true was specified.");
                     } else {
-                        project.logger.lifecycle("Tag! you are it! Release plugin will create a new branch ${getSCMService().getBranchName()} for project ${project.name}");
-                        getSCMService().performTagging(getSCMService().getBranchName() + "-RELEASE-" + project.version, msg)
+                        def tagName = buildTagName(extension.prependSourceBranchToTag)
+                        project.logger.lifecycle("Tag! you are it! Release plugin will create a tag ${tagName} from branch ${getSCMService().getBranchName()} for project ${project.name}");
+                        getSCMService().performTagging(tagName, msg)
                     }
                 }
             }
         }
 
         releaseTask.description = "Release the project by setting a final non-snapshot version, building and creating a tag."
+    }
+
+    private buildTagName(def prependSourceBranch) {
+        def prefix = ''
+
+        if(prependSourceBranch) {
+            prefix = "${getSCMService().getBranchName()}-"
+        }
+
+        "${prefix}RELEASE-${project.version}"
     }
 
     def String getProjectVersion() {

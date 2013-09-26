@@ -15,8 +15,6 @@
  */
 package au.com.ish.gradle
 
-import au.com.ish.gradle.ReleasePlugin
-
 class ReleasePluginExtension {
   private boolean failOnSnapshotDependencies = true
 
@@ -29,6 +27,7 @@ class ReleasePluginExtension {
   private String password
   private boolean releaseDryRun = false
   private boolean allowLocalModifications = false
+  private boolean prependSourceBranchToTag = true
 
   public ReleasePluginExtension(ReleasePlugin plugin) {
     this.plugin = plugin
@@ -139,4 +138,11 @@ class ReleasePluginExtension {
     return allowLocalModifications
   }
 
+  boolean getPrependSourceBranchToTag() {
+      return prependSourceBranchToTag
+  }
+
+  void setPrependSourceBranchToTag(boolean prependSourceBranchToTag) {
+      this.prependSourceBranchToTag = prependSourceBranchToTag
+  }
 }

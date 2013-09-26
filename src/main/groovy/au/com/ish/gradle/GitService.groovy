@@ -44,10 +44,18 @@ class GitService extends SCMService {
     }
 
     def String getLatestReleaseTag(String currentBranch) {
-        def tagSearchPattern = "${currentBranch}-REL-*"
+        def tagSearchPattern = buildTagSearchPattern(currentBranch)
 
         gitExec(['for-each-ref', '--count=1', "--sort=-taggerdate",
             "--format=%(refname:short)", "refs/tags/${tagSearchPattern}"])
+    }
+
+    private buildTagSearchPattern(String currentBranch) {
+        def prefix = ''
+        if(project.release.prependSourceBranchToTag) {
+            prefix = "${currentBranch}-"
+        }
+        "${prefix}RELEASE-*"
     }
 
     String getSCMVersion() {
@@ -56,7 +64,7 @@ class GitService extends SCMService {
 
     def boolean onTag() {
         try {
-            if (releaseTagPattern.matcher(tagNameOnCurrentRevision()).matches()) {
+            if (getReleaseTagPattern().matcher(tagNameOnCurrentRevision()).matches()) {
                 return true
             }
         } catch (Exception e) {}
