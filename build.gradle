@@ -52,13 +52,13 @@ group = 'au.com.ish.gradle'
 repositories {
 	mavenCentral()
 	maven {
-		url 'http://maven.tmatesoft.com/content/repositories/snapshots/'
+		url 'http://maven.tmatesoft.com/content/repositories/releases/'
 	}
 }
 
 dependencies {
 	compile gradleApi()
-	compile 'org.tmatesoft.svnkit:svnkit:1.8.0-SNAPSHOT'
+	compile 'org.tmatesoft.svnkit:svnkit:1.8.0'
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
