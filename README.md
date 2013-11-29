@@ -104,6 +104,10 @@ Many people will want to call their build task like this to build, test, tag and
 
 ## Release notes
 
+### 2.2 (29 November 2013)
+
+* Upgrade to svnkit 1.8 final release. No functional change.
+
 ### 2.2b1 (25 August 2013)
 
 * Upgrade to svnkit alpha release so that we can support subversion 1.8 repositories
