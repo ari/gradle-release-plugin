@@ -35,7 +35,7 @@ class GitService extends SCMService {
     }
 
     def boolean hasLocalModifications() {
-        gitExec(['status', '--porcelain']) != null
+        gitExec(['status', '--porcelain']) != ""
     }
 
     def boolean remoteIsAheadOfLocal() {
