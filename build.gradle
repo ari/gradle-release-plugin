@@ -34,7 +34,7 @@ apply plugin: 'signing'
 apply plugin: 'release'
 release {
     //use git scm, unless otherwise specified in with -PscmFlavour= or in users gradle properties
-    scm = project.hasProperty('scmFlavour') ? project.scmFlavour:'git'
+    scm = 'git'
     failOnSnapshotDependencies = false
 
     //properties for svn access
