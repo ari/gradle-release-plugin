@@ -50,7 +50,7 @@ buildscript {
   }
 
   dependencies {
-    classpath 'au.com.ish.gradle:release:2.2b1'
+    classpath 'au.com.ish.gradle:release:2.2'
   }
 }
 
