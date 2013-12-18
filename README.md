@@ -45,7 +45,7 @@ buildscript {
   repositories {
     mavenCentral()
     maven {
-      url 'http://maven.tmatesoft.com/content/repositories/snapshots/'
+      url 'http://maven.tmatesoft.com/content/repositories/releases/'
     }
   }
 
