@@ -1,4 +1,10 @@
 language: groovy
+
+before_install:
+ - sudo apt-get update -qq
+ - sudo apt-get install -qq git
+
 jdk:
   - oraclejdk7
+
 script: "./gradlew test"
