@@ -50,7 +50,7 @@ buildscript {
   }
 
   dependencies {
-    classpath 'au.com.ish.gradle:release:2.2'
+    classpath 'au.com.ish.gradle:release:2.2.2'
   }
 }
 
@@ -103,6 +103,9 @@ Many people will want to call their build task like this to build, test, tag and
 
 
 ## Release notes
+
+### 2.2.2 (12 January 2014)
+Oops. Typo in the previous commit... can't set a Java property as a boolean, only as a string.
 
 ### 2.2.1 (4 January 2014)
 

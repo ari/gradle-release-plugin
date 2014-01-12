@@ -53,7 +53,7 @@ class SvnService extends SCMService {
         project.logger.info("Creating SvnService for $project")
 
         // Don't let svnkit try to upgrade the working copy version when it creates a tag
-        System.setProperty("svnkit.upgradeWC", false);
+        System.setProperty("svnkit.upgradeWC", "false");
 
         // do some basic setup
         SVNRepositoryFactoryImpl.setup();
