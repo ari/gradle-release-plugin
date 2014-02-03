@@ -94,10 +94,6 @@ class GitService extends SCMService {
         try {                
             gitExec(['tag', '-a', tag, '-m', message])
             gitExec(['push', '--tags'])
-
-            if(project.release.switchToTagOnRelease) {
-                gitExec(['checkout', tag])
-            }
         } catch (ExecException e) {
             throw new GradleException("Failed to create or push the git tag ${tag}")
         }
