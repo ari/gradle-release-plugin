@@ -45,12 +45,12 @@ buildscript {
   repositories {
     mavenCentral()
     maven {
-      url 'http://maven.tmatesoft.com/content/repositories/snapshots/'
+      url 'http://maven.tmatesoft.com/content/repositories/releases/'
     }
   }
 
   dependencies {
-    classpath 'au.com.ish.gradle:release:2.2b1'
+    classpath 'au.com.ish.gradle:release:2.2.2'
   }
 }
 
@@ -105,6 +105,17 @@ Many people will want to call their build task like this to build, test, tag and
 
 
 ## Release notes
+
+### 2.2.2 (12 January 2014)
+Oops. Typo in the previous commit... can't set a Java property as a boolean, only as a string.
+
+### 2.2.1 (4 January 2014)
+
+* Don't let SVNkit try to upgrade the working copy to 1.8 when it creates a tag. This plays better with other tools (eg. Jenkins) which are still limited to running a 1.7 working copy.
+
+### 2.2 (29 November 2013)
+
+* Upgrade to svnkit 1.8 final release. No functional change.
 
 ### 2.2b1 (25 August 2013)
 

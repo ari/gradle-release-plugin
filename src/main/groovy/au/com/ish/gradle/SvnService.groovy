@@ -51,7 +51,11 @@ class SvnService extends SCMService {
     SvnService(Project project) {
         this.project = project;
         project.logger.info("Creating SvnService for $project")
-        //do some basic setup
+
+        // Don't let svnkit try to upgrade the working copy version when it creates a tag
+        System.setProperty("svnkit.upgradeWC", "false");
+
+        // do some basic setup
         SVNRepositoryFactoryImpl.setup();
         FSRepositoryFactory.setup();
         DAVRepositoryFactory.setup();
@@ -66,7 +70,7 @@ class SvnService extends SCMService {
             project.logger.lifecycle("Release plugin is using subversion scm with authentication details from svn config")
             authManager= SVNWCUtil.createDefaultAuthenticationManager();
         }
-        //make sure the creditenials are sent, do not wait for the server to require them
+        // make sure the credentials are sent, do not wait for the server to require them
         authManager.setAuthenticationForced(true);
 
         // svn client manager has to be defined with authManager, otherwise it will use the default one (important for the performTagging)
