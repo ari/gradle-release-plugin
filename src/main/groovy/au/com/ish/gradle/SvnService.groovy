@@ -162,7 +162,7 @@ class SvnService extends SCMService {
     def String getLatestReleaseTag(String currentBranch) {
         def entries = svnRepo.getDir( "tags", -1 , null , (Collection) null );
         SVNDirEntry max = entries.max{it2->
-            def matcher = releaseTagPattern.matcher(it2.name);
+            def matcher = getReleaseTagPattern().matcher(it2.name);
             if (matcher.matches() && branchName.equals(matcher.group(1))) {
               return Integer.valueOf(matcher.group(2))
             } else {

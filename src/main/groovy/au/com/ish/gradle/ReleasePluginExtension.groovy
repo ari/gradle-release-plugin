@@ -15,8 +15,6 @@
  */
 package au.com.ish.gradle
 
-import au.com.ish.gradle.ReleasePlugin
-
 class ReleasePluginExtension {
   private boolean failOnSnapshotDependencies = true
 
@@ -29,6 +27,7 @@ class ReleasePluginExtension {
   private String password
   private boolean releaseDryRun = false
   private boolean allowLocalModifications = false
+  private boolean prependSourceBranchToTag = true
 
   public ReleasePluginExtension(ReleasePlugin plugin) {
     this.plugin = plugin
@@ -139,4 +138,18 @@ class ReleasePluginExtension {
     return allowLocalModifications
   }
 
+  /*
+    Get the previously set value for this property.
+   */
+  boolean getPrependSourceBranchToTag() {
+      return prependSourceBranchToTag
+  }
+
+    /*
+       Whether or not to add the source branch to the beginning of the release tag name.
+       i.e. true would create trunk-RELEASE-1, false would create RELEASE-1.
+     */
+  void setPrependSourceBranchToTag(boolean prependSourceBranchToTag) {
+      this.prependSourceBranchToTag = prependSourceBranchToTag
+  }
 }

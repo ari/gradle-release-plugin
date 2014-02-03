@@ -74,6 +74,7 @@ The options avilable are:
 * failOnSnapshotDependencies: default is true. Will fail the release task if any dependency is currently pointing to a SNAPSHOT
 * allowLocalModifications: defaults to false. Will fail the release task if any uncommitted changes remain in your local version control. This prevents you from releasing a build which you cannot later reproduce because you don't have the complete set of source which went into the build.
 * releaseDryRun: this skips the commit of the tag to your version control system
+* prependSourceBranchToTag: default is true.  If true, the release tag name that is created will look like this: trunk-RELEASE-1.  If false, the release tag that is created will look like this: RELEASE-1.
 * scm: your choices here are 'git' or 'svn'
 * username: a username for your version control system. This is mostly useful for running releases from a continuous integration server like Jenkins. If you don't pass this, the release plugin will take credentials from any cached on your system or prompt you for them.
 * password: a password to match the username
