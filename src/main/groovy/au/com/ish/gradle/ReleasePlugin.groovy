@@ -42,7 +42,7 @@ class ReleasePlugin implements Plugin<Project> {
                         currentProject.configurations.each { configuration ->
                             project.logger.info("Checking for snapshot dependencies in $currentProject.path -> $configuration.name")
                             configuration.allDependencies.each { Dependency dependency ->
-                                if (dependency.version?.contains('SNAPSHOT') && !(dependency instanceof ProjectDependency)) {
+                                if (dependency.version?.contains('SNAPSHOT')) {
                                     snapshotDependencies.add("${dependency.group}:${dependency.name}:${dependency.version}")
                                 }
                             }
