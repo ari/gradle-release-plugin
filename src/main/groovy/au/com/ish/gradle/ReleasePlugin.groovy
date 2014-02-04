@@ -15,13 +15,12 @@
  */
 package au.com.ish.gradle
 
+import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
-import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.Dependency
-import org.gradle.api.GradleException
-import org.gradle.api.tasks.testing.*
+import org.gradle.api.artifacts.ProjectDependency
 
 class ReleasePlugin implements Plugin<Project> {
     private final String TASK_RELEASE = 'release'
@@ -30,7 +29,7 @@ class ReleasePlugin implements Plugin<Project> {
 
     def void apply(Project project) {
         this.project = project
-        project.logger.info("Applying ReleasePlugin to project: "+project.name)
+        project.logger.info("Applying ReleasePlugin to project: " + project.name)
         ReleasePluginExtension extension = project.getExtensions().create("release", ReleasePluginExtension.class, this);
 
         Task releaseTask = project.task(TASK_RELEASE) {
@@ -63,13 +62,14 @@ class ReleasePlugin implements Plugin<Project> {
                     throw new GradleException('Project contains changed which are not pushed to the remote repository.');
                 }
 
-                if (! getSCMService().onTag()) {
+                if (!getSCMService().onTag()) {
                     def msg = "#0000 Release ${project.version} from branch ${getSCMService().getBranchName()}"
                     if (extension.getReleaseDryRun()) {
                         project.logger.lifecycle("Scm would be tagged now, but releaseDryRun=true was specified.");
                     } else {
-                        project.logger.lifecycle("Tag! you are it! Release plugin will create a new branch ${getSCMService().getBranchName()} for project ${project.name}");
-                        getSCMService().performTagging( getSCMService().getBranchName() + "-RELEASE-" + project.version, msg)
+                        def tagName = buildTagName(extension.prependSourceBranchToTag)
+                        project.logger.lifecycle("Tag! you are it! Release plugin will create a tag ${tagName} from branch ${getSCMService().getBranchName()} for project ${project.name}");
+                        getSCMService().performTagging(tagName, msg)
                     }
                 }
             }
@@ -78,11 +78,21 @@ class ReleasePlugin implements Plugin<Project> {
         releaseTask.description = "Release the project by setting a final non-snapshot version, building and creating a tag."
     }
 
+    private buildTagName(def prependSourceBranch) {
+        def prefix = ''
+
+        if(prependSourceBranch) {
+            prefix = "${getSCMService().getBranchName()}-"
+        }
+
+        "${prefix}RELEASE-${project.version}"
+    }
+
     def String getProjectVersion() {
-        project.logger.debug("release version specified? "+hasProperty('releaseVersion'))
+        project.logger.debug("release version specified? " + hasProperty('releaseVersion'))
 
         if (project.hasProperty('releaseVersion')) {
-            project.logger.info("release version specified: " +project.releaseVersion+" won't attempt to use scm service to establish project version")
+            project.logger.info("release version specified: " + project.releaseVersion + " won't attempt to use scm service to establish project version")
             return project.releaseVersion
         }
 
@@ -102,6 +112,7 @@ class ReleasePlugin implements Plugin<Project> {
     /*
         Lazily instantiate the SCMService when it is needed, or return the existing service if we've already created it before
     */
+
     def SCMService getSCMService() {
         if (scmService) return scmService
 

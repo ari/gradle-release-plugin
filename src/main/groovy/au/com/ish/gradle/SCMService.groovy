@@ -16,7 +16,17 @@
 package au.com.ish.gradle
 
 abstract public class SCMService {
-	private final def releaseTagPattern = ~/^(\S+)-REL-(\d+)$/
+	private final def releaseTagPatternWithBranch = ~/^(\S+)-RELEASE-(\d+)$/
+	private final def releaseTagPatternWithoutBranch = ~/^RELEASE-(\d+)$/
+
+    protected def getReleaseTagPattern() {
+        if (project.release.prependSourceBranchToTag) {
+            return releaseTagPatternWithBranch
+        }
+        else {
+            return releaseTagPatternWithoutBranch
+        }
+    }
 
 	/*
 		Are we on a tag or a normal branch
