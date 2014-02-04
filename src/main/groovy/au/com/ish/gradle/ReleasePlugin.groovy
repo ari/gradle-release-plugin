@@ -21,6 +21,7 @@ import org.gradle.api.Task
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.Dependency
 import org.gradle.api.GradleException
+import org.gradle.api.artifacts.ProjectDependency
 import org.gradle.api.tasks.testing.*
 
 class ReleasePlugin implements Plugin<Project> {
@@ -43,7 +44,7 @@ class ReleasePlugin implements Plugin<Project> {
                         currentProject.configurations.each { configuration ->
                             project.logger.info("Checking for snapshot dependencies in $currentProject.path -> $configuration.name")
                             configuration.allDependencies.each { Dependency dependency ->
-                                if (dependency.version?.contains('SNAPSHOT')) {
+                                if (dependency.version?.contains('SNAPSHOT') && !(dependency instanceof ProjectDependency)) {
                                     snapshotDependencies.add("${dependency.group}:${dependency.name}:${dependency.version}")
                                 }
                             }
