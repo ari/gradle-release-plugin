@@ -16,10 +16,6 @@
 
  buildscript {
 	repositories {
-		maven {
-			// this is useful to be able to release this plugin against a snapshot version of itself
-        	url 'https://oss.sonatype.org/content/repositories/snapshots'
-    	}
 		mavenCentral()
 	}
 	dependencies {
@@ -51,14 +47,12 @@ group = 'au.com.ish.gradle'
 
 repositories {
 	mavenCentral()
-	maven {
-		url 'http://maven.tmatesoft.com/content/repositories/releases/'
-	}
 }
 
 dependencies {
 	compile gradleApi()
-	compile 'org.tmatesoft.svnkit:svnkit:1.8.0'
+	compile 'org.tmatesoft.svnkit:svnkit:1.8.3-1'
+	compile 'org.eclipse.jgit:org.eclipse.jgit:3.3.1.201403241930-r'
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
