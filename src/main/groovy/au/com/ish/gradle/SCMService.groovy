@@ -16,7 +16,7 @@
 package au.com.ish.gradle
 
 abstract public class SCMService {
-	private final def releaseTagPattern = ~/^(\S+)-REL-(\d+)$/
+	protected final def releaseTagPattern = ~/^(\S+)-REL-(\d+)$/
 
 	/*
 		Are we on a tag or a normal branch

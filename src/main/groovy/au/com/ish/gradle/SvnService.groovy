@@ -15,26 +15,16 @@
  */
 package au.com.ish.gradle
 
-import au.com.ish.gradle.SCMService
-import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.tmatesoft.svn.core.SVNDirEntry
 import org.tmatesoft.svn.core.SVNURL
-import org.tmatesoft.svn.core.auth.ISVNAuthenticationManager;
+import org.tmatesoft.svn.core.auth.ISVNAuthenticationManager
 import org.tmatesoft.svn.core.internal.io.dav.DAVRepositoryFactory
 import org.tmatesoft.svn.core.internal.io.fs.FSRepositoryFactory
 import org.tmatesoft.svn.core.internal.io.svn.SVNRepositoryFactoryImpl
-import org.tmatesoft.svn.core.internal.util.SVNPathUtil
 import org.tmatesoft.svn.core.io.SVNRepository
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory
-import org.tmatesoft.svn.core.wc.ISVNOptions;
-import org.tmatesoft.svn.core.wc.SVNClientManager
-import org.tmatesoft.svn.core.wc.SVNCopySource
-import org.tmatesoft.svn.core.wc.SVNInfo
-import org.tmatesoft.svn.core.wc.SVNRevision
-import org.tmatesoft.svn.core.wc.SVNStatus
-import org.tmatesoft.svn.core.wc.SVNWCUtil
-import org.tmatesoft.svn.util.SVNDebugLog
+import org.tmatesoft.svn.core.wc.*
 
 class SvnService extends SCMService {
 
@@ -52,7 +42,7 @@ class SvnService extends SCMService {
         this.project = project;
         project.logger.info("Creating SvnService for $project")
 
-        // Don't let svnkit try to upgrade the working copy version when it creates a tag
+        // Don't let svnkit try to upgrade the working copy version unless it tries to create a tag
         System.setProperty("svnkit.upgradeWC", "false");
 
         // do some basic setup
