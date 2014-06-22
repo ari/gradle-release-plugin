@@ -15,13 +15,8 @@
  */
 package au.com.ish.gradle
 
-import au.com.ish.gradle.ReleasePlugin
-
 class ReleasePluginExtension {
   private boolean failOnSnapshotDependencies = true
-
-  private versionStrategy = { currentVersion -> new BigDecimal(currentVersion).add(BigDecimal.ONE).toPlainString() }
-  private startVersion = { currentBranch -> "1" }
 
   private final ReleasePlugin plugin
   private String scm
