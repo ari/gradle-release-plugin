@@ -60,8 +60,6 @@ class SvnService extends SCMService {
             project.logger.lifecycle("Release plugin is using subversion scm with authentication details from svn config")
             authManager= SVNWCUtil.createDefaultAuthenticationManager();
         }
-        // make sure the credentials are sent, do not wait for the server to require them
-        authManager.setAuthenticationForced(true);
 
         // svn client manager has to be defined with authManager, otherwise it will use the default one (important for the performTagging)
         project.logger.info("Creating SvnClient")
