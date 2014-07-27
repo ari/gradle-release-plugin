@@ -4,7 +4,7 @@
 
 Gradle releases made easy. Other release processes force you to store your versioning information inside the project files such as build.gradle; this plugin keeps versions where they belong, in your version control system. We currently support subversion or git. Additional SCM choices are easy to add.
 
-This plugin doesn't try to take over your release management process. Instead it does two simple and clear things:
+This plugin doesn't try to take over your release management process. Maven's release plugin will create two or three commits, alter the pom twice and have a number of unusual side effects. Instead, this plugin does two simple and clear things:
 
 
 ## What this plugin does
@@ -17,23 +17,24 @@ So let's say you are building a project in subversion and your working copy was 
 
 If you are building code checked out from https://svn.acme.com/project/tags/1.2, release.projectVersion will be '1.2'. And if you are building from https://svn.acme.com/project/branches/big-refactor, the you'll get 'big-refactor-SNAPSHOT'.
 
-Git is just the same. The version will automatically be set to the tag name or branch name. No longer will you be chasing around changing the version in build.gradle as you make new branches or tag your code.
+Git is just the same. The version will automatically be set to the tag name or branch name. No longer will you be changing the version in build.gradle or properties as you make new branches or tag your code. No longer will some plugin be guessing what the next release version will be.
 
-At any time you can override the version number on the command line:
+The main effect of this plugin in regular use is to set the variable "release.projectVersion". What you do with it is up to you, but typically you would have a line:
+
+    version = release.projectVersion
+
+At any time you can override the version number which this plugin creates by adding a property on the command line:
 
      gradle assemble -PreleaseVersion=2.0-SNAPSHOT
 
 
 ### 2. Release tagging
 
-Just run this to have the plugin automatically guess the next available version number, and create a tag in your version control system of choice.
-
-     gradle release
-
-Or this if you want to set the release version yourself.
+When you release, the plugin will not try to guess the release version of the product. Instead you pass it on the command line (or add a property to your CI system such as Jenkins).
 
      gradle release -PreleaseVersion=4.1.2
 
+Once the build is complete, the release plugin will create a tag in your SCM.
 
 
 ## Usage
@@ -84,8 +85,8 @@ The options avilable are:
 You can access two properties from this plugin once you have configured it:
 
   release.projectVersion
-    Read only property for getting the version of this project.
-    The version is derived from the following rules:
+    Read only property for getting the version of this project. The version is derived from the following rules:
+
     1. If the releaseVersion property was passed to gradle via the -P command line option, then use that.
     2. If the version control system is currently pointing to a tag, then use a version derived from the name of the tag
     3. Use the name of the branch (or trunk/head) as the version appended with "-SNAPHOT"
