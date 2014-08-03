@@ -74,18 +74,4 @@ class ReleasePluginTest {
 		assert project.release.scmVersion == "abc"
 	}
 
-	//verifies if the exec env is available
-	@Test
-	public void testExec() {
-		def stdout = new ByteArrayOutputStream()
-
-        project.exec {
-            executable = 'env'
-        }
-
-        if (stdout.toByteArray().length > 0) {
-            println stdout.toString()
-        } 
-	}
-
 }
