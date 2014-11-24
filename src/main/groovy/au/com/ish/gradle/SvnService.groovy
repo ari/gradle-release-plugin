@@ -53,7 +53,7 @@ class SvnService extends SCMService {
         //set an auth manager which will provide user credentials
         project.logger.info("SvnService authentication manager setup")
         def ISVNAuthenticationManager authManager
-        if (scmCreditenialsProvided()) {
+        if (scmCredentialsProvided()) {
             project.logger.lifecycle("Release plugin is using subversion scm with provided authentication details (user "+project.extensions.release.username+")")
             authManager= SVNWCUtil.createDefaultAuthenticationManager(project.extensions.release.username, project.extensions.release.password);
         } else {
@@ -75,7 +75,7 @@ class SvnService extends SCMService {
         svnRepo.setAuthenticationManager(authManager);
     }
 
-    def boolean scmCreditenialsProvided() {
+    def private boolean scmCredentialsProvided() {
         def boolean userDefined = project.extensions.release.username != null && project.extensions.release.username.length() > 0
         def boolean passwordDefined = project.extensions.release.password != null && project.extensions.release.password.length() > 0
         return userDefined && passwordDefined

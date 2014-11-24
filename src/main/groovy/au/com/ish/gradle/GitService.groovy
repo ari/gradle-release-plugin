@@ -14,44 +14,57 @@
  * limitations under the License.
  */
 package au.com.ish.gradle
-
+import org.eclipse.jgit.api.Git
+import org.eclipse.jgit.lib.Ref
+import org.eclipse.jgit.lib.Repository
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder
 import org.gradle.api.Project
-import org.gradle.api.tasks.Exec
 
-import au.com.ish.gradle.SCMService
-import org.gradle.api.GradleException
-import org.gradle.process.internal.ExecException
+import static org.eclipse.jgit.lib.Constants.HEAD
 
 class GitService extends SCMService {
 
     def private Project project
+    def private Git git
+    def private Repository repository
 
+    GitService() {
+        //private constructor only used for tests
+    }
+    
     def GitService(Project project) {
         this.project = project;
+        project.logger.info("Creating GitService for $project")
+
+        repository = new FileRepositoryBuilder().setGitDir(project.projectDir)
+            .readEnvironment()
+            .findGitDir()
+            .build();
+        git = new Git(repository);
     }
 
     def boolean localIsAheadOfRemote() {
-        gitExec(['status']).contains('Your branch is ahead')
+        // this is git, so we don't really care about the remote (and there could be several remotes)
+        return false
     }
 
     def boolean hasLocalModifications() {
-        gitExec(['status', '--porcelain']) == true
+        return git.status().getPaths().size() > 0
     }
 
     def boolean remoteIsAheadOfLocal() {
+        // this is git, so we don't really care about the remote (and there could be several remotes)
         return false
-        //TODO requires implementation
     }
 
     def String getLatestReleaseTag(String currentBranch) {
-        def tagSearchPattern = "${currentBranch}-REL-*"
-
-        gitExec(['for-each-ref', '--count=1', "--sort=-taggerdate",
-            "--format=%(refname:short)", "refs/tags/${tagSearchPattern}"])
+        // this just gets the last commit and something cleverer might be needed to match tags with the right naming
+        List<Ref> tagList = git.tagList().call()
+        return tagList[0].getName()
     }
 
     String getSCMVersion() {
-        return "abc" //TODO: implement
+        return repository.getRef(HEAD)
     }
 
     def boolean onTag() {
@@ -59,7 +72,7 @@ class GitService extends SCMService {
             if (releaseTagPattern.matcher(tagNameOnCurrentRevision()).matches()) {
                 return true
             }
-        } catch (Exception e) {}
+        } catch (Exception ignored) {}
         return false
     }
 
@@ -68,27 +81,12 @@ class GitService extends SCMService {
             return tagNameOnCurrentRevision()
         }
 
-        def refName = gitExec(['symbolic-ref', '-q', 'HEAD']).replaceAll("\\n", "")
-
-        if (!refName) {
-            throw new GradleException('Could not determine the current branch name.');
-        } else if (!refName.startsWith('refs/heads/')) {
-            throw new GradleException('Checkout the branch to release from.');
-        }
-
-        def prefixLength = 'refs/heads/'.length()
-        def branchName = refName[prefixLength..-1]
-
-        return branchName.replaceAll('[^\\w\\.\\-\\_]', '_')
+        return repository.getBranch()
     }
 
     def performTagging(String tag, String message) {
-        try {                
-            gitExec(['tag', '-a', tag, '-m', message])
-            gitExec(['push', '--tags'])
-        } catch (ExecException e) {
-            throw new GradleException("Failed to create or push the git tag ${tag}")
-        }
+        git.tag().setName(tag).setAnnotated(true).setMessage(message).call()
+        git.push().call();
     }
 
     /*
@@ -98,21 +96,5 @@ class GitService extends SCMService {
     */
     private String tagNameOnCurrentRevision() {
         gitExec(['describe', '--exact-match', 'HEAD']).replaceAll("\\n", "")
-    }
-
-    def private gitExec(List gitArgs) {
-        def stdout = new ByteArrayOutputStream()
-
-        project.exec {
-            executable = 'git'
-            args = gitArgs
-            standardOutput = stdout
-        }
-
-        if (stdout.toByteArray().length > 0) {
-            return stdout.toString()
-        } else {
-            return null
-        }
     }
 }
