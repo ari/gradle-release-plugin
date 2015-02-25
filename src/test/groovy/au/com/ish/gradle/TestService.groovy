@@ -18,12 +18,11 @@
 
 package au.com.ish.gradle
 
-import au.com.ish.gradle.SCMService
 import org.gradle.api.Project
 
 class TestService extends SCMService {
     Project project
-
+    String tag
     def TestService(project) {
         this.project = project
     }
@@ -57,6 +56,6 @@ class TestService extends SCMService {
     }
 
     def performTagging(String tag, String message) {
-        // nothing needs to happen here
+        this.tag = "$tag-$message"
     }
 }

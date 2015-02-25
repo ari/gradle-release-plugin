@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 package au.com.ish.gradle
-
+import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
-import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.Dependency
-import org.gradle.api.GradleException
 import org.gradle.api.artifacts.ProjectDependency
-import org.gradle.api.tasks.testing.*
 
 class ReleasePlugin implements Plugin<Project> {
     private final String TASK_RELEASE = 'release'
@@ -70,7 +67,7 @@ class ReleasePlugin implements Plugin<Project> {
                         project.logger.lifecycle("Scm would be tagged now, but releaseDryRun=true was specified.");
                     } else {
                         project.logger.lifecycle("Tag! you are it! Release plugin will create a new branch ${getSCMService().getBranchName()} for project ${project.name}");
-                        getSCMService().performTagging( getSCMService().getBranchName() + "-RELEASE-" + project.version, msg)
+                        getSCMService().performTagging( extension.tagIt(), msg)
                     }
                 }
             }
@@ -80,10 +77,10 @@ class ReleasePlugin implements Plugin<Project> {
     }
 
     def String getProjectVersion() {
-        project.logger.debug("release version specified? "+hasProperty('releaseVersion'))
+        project.logger.debug("release version specified? " + hasProperty('releaseVersion'))
 
         if (project.hasProperty('releaseVersion')) {
-            project.logger.info("release version specified: " +project.releaseVersion+" won't attempt to use scm service to establish project version")
+            project.logger.info("release version specified: " + project.releaseVersion +" won't attempt to use scm service to establish project version")
             return project.releaseVersion
         }
 
