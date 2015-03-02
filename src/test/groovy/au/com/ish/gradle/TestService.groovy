@@ -14,48 +14,49 @@
  * limitations under the License.
  */
 
- /* This is a mock service used only for testing */
+/* This is a mock service used only for testing */
 
 package au.com.ish.gradle
 
 import org.gradle.api.Project
 
 class TestService extends SCMService {
-    Project project
-    String tag
-    def TestService(project) {
-        this.project = project
-    }
+  Project project
+  String tag
 
-    def boolean localIsAheadOfRemote() {
-        return false
-    }
+  def TestService(project) {
+    this.project = project
+  }
 
-    def boolean hasLocalModifications() {
-        return false
-    }
+  def boolean localIsAheadOfRemote() {
+    return false
+  }
 
-    def boolean remoteIsAheadOfLocal() {
-        return false
-    }
+  def boolean hasLocalModifications() {
+    return false
+  }
 
-    def String getLatestReleaseTag(String currentBranch) {
-        return "test-RELEASE-11"
-    }
+  def boolean remoteIsAheadOfLocal() {
+    return false
+  }
 
-    String getSCMVersion() {
-        return "abc"
-    }
+  def String getLatestReleaseTag(String currentBranch) {
+    return "test-RELEASE-11"
+  }
 
-    def boolean onTag() {
-        return false
-    }
+  String getSCMVersion() {
+    return "abc"
+  }
 
-    def String getBranchName() {
-        return "xyz"
-    }
+  def boolean onTag() {
+    return false
+  }
 
-    def performTagging(String tag, String message) {
-        this.tag = "$tag-$message"
-    }
+  def String getBranchName() {
+    return "xyz"
+  }
+
+  def performTagging(String tag, String message) {
+    this.tag = "$tag-$message"
+  }
 }

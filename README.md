@@ -63,9 +63,10 @@ release {
   scm = 'svn'
   username = 'fred'
   password = 'secret01'
-  tag = {
+  tagName = {
     "use the $project.version within a tag like this"
   }
+  tagRegex = ~/.*tag.*/
 }
 version = release.projectVersion
 ````
@@ -81,7 +82,8 @@ The options avilable are:
 * username: a username for your version control system. This is mostly useful for running releases from a continuous integration server like Jenkins. If you don't pass this, the release plugin will take credentials from any cached on your system or prompt you for them.
 * password: a password to match the username
 * scmRoot: The path to your version control repository. This is not needed if you have a simple checkout of the trunk path and only one gradle project beneath that. Some people have different layouts and this hint is needed so that the release plugin knows where to make tags and look for branches. Only used for subversion.
-* tag: Specify how you want the tag to be built. Can be a string or a closure that can build the tag. 
+* tagName: Specify how you want the tag to be built. Can be a string or a closure that can build the tag.
+* tagRegex: Specify a regex that can be used to identify tags (currently used for Git only, as SVN uses directory structure to identify)
 
 ### Properties
 

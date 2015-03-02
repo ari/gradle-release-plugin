@@ -16,160 +16,170 @@
 package au.com.ish.gradle
 
 class ReleasePluginExtension {
-    private boolean failOnSnapshotDependencies = true
+  private boolean failOnSnapshotDependencies = true
 
-    private versionStrategy = { currentVersion -> new BigDecimal(currentVersion).add(BigDecimal.ONE).toPlainString() }
-    private startVersion = { currentBranch -> "1" }
+  private versionStrategy = { currentVersion -> new BigDecimal(currentVersion).add(BigDecimal.ONE).toPlainString() }
+  private startVersion = { currentBranch -> "1" }
 
-    private final ReleasePlugin plugin
-    private String scm
-    private String username
-    private String password
-    private boolean releaseDryRun = false
-    private boolean allowLocalModifications = false
-    private def tag
+  private final ReleasePlugin plugin
+  private String scm
+  private String username
+  private String password
+  private boolean releaseDryRun = false
+  private boolean allowLocalModifications = false
+  private def tagName
+  private def tagRegex
 
-    public ReleasePluginExtension(ReleasePlugin plugin) {
-        this.plugin = plugin
-    }
 
-    /*
-      Read only property for getting the version of this project.
-      The version is derived from the following rules:
-      1. If the releaseVersion property was passed to gradle via the -P command line option, then use that.
-      2. If the version control system is currently pointing to a tag, then use a version derived from the name of the tag
-      3. Use the name of the branch (or trunk/head) as the version appended with "-SNAPHOT"
-    */
+  public ReleasePluginExtension(ReleasePlugin plugin) {
+    this.plugin = plugin
+  }
 
-    public getProjectVersion() {
-        return plugin.projectVersion
-    }
+  /*
+    Read only property for getting the version of this project.
+    The version is derived from the following rules:
+    1. If the releaseVersion property was passed to gradle via the -P command line option, then use that.
+    2. If the version control system is currently pointing to a tag, then use a version derived from the name of the tag
+    3. Use the name of the branch (or trunk/head) as the version appended with "-SNAPHOT"
+  */
 
-    /*
-      Read only property for getting the version which the source control system is pointing to.
-    */
+  public getProjectVersion() {
+    return plugin.projectVersion
+  }
 
-    public String getScmVersion() {
-        return plugin.getSCMVersion()
-    }
+  /*
+    Read only property for getting the version which the source control system is pointing to.
+  */
 
-    /*
-      Get the previously set value for this property
-    */
+  public String getScmVersion() {
+    return plugin.getSCMVersion()
+  }
 
-    public boolean getFailOnSnapshotDependencies() {
-        return failOnSnapshotDependencies
-    }
+  /*
+    Get the previously set value for this property
+  */
 
-    /*
-      A configurable option which defaults to true. Will fail the release task if any dependency is
-      currently pointing to a SNAPSHOT
-    */
+  public boolean getFailOnSnapshotDependencies() {
+    return failOnSnapshotDependencies
+  }
 
-    public setFailOnSnapshotDependencies(boolean failOnSnapshotDependencies) {
-        this.failOnSnapshotDependencies = failOnSnapshotDependencies
-    }
+  /*
+    A configurable option which defaults to true. Will fail the release task if any dependency is
+    currently pointing to a SNAPSHOT
+  */
 
-    /*
-      Define the type of version control system in use for this project. Current valid values are:
-      * svn
-      * git
-    */
+  public setFailOnSnapshotDependencies(boolean failOnSnapshotDependencies) {
+    this.failOnSnapshotDependencies = failOnSnapshotDependencies
+  }
 
-    public setScm(String scm) {
-        this.scm = scm
-    }
+  /*
+    Define the type of version control system in use for this project. Current valid values are:
+    * svn
+    * git
+  */
 
-    /*
-      Get the previously set value for this property
-    */
+  public setScm(String scm) {
+    this.scm = scm
+  }
 
-    public getScm() {
-        return scm
-    }
+  /*
+    Get the previously set value for this property
+  */
 
-    /*
-      Define the scm username
-    */
+  public getScm() {
+    return scm
+  }
 
-    public setUsername(String username) {
-        this.username = username
-    }
+  /*
+    Define the scm username
+  */
 
-    /*
-      Get the previously set value for this property
-    */
+  public setUsername(String username) {
+    this.username = username
+  }
 
-    public getUsername() {
-        return username
-    }
+  /*
+    Get the previously set value for this property
+  */
 
-    /*
-      Define the scm password
-    */
+  public getUsername() {
+    return username
+  }
 
-    public setPassword(String password) {
-        this.password = password
-    }
+  /*
+    Define the scm password
+  */
 
-    /*
-      Get the previously set value for this property
-    */
+  public setPassword(String password) {
+    this.password = password
+  }
 
-    public getPassword() {
-        return password
-    }
+  /*
+    Get the previously set value for this property
+  */
 
-    /*
-      Set simulate variable, releaseDryRun == true means no actual commit to the scm
-    */
+  public getPassword() {
+    return password
+  }
 
-    public setReleaseDryRun(boolean releaseDryRun) {
-        this.releaseDryRun = releaseDryRun
-    }
+  /*
+    Set simulate variable, releaseDryRun == true means no actual commit to the scm
+  */
 
-    /*
-      Get the previously set value for this property
-    */
+  public setReleaseDryRun(boolean releaseDryRun) {
+    this.releaseDryRun = releaseDryRun
+  }
 
-    public getReleaseDryRun() {
-        return releaseDryRun
-    }
+  /*
+    Get the previously set value for this property
+  */
 
-    /*
-      Set allowLocalModifications variable, allowing to skip the working copy for local changes
-    */
+  public getReleaseDryRun() {
+    return releaseDryRun
+  }
 
-    public setAllowLocalModifications(boolean allowLocalModifications) {
-        this.allowLocalModifications = allowLocalModifications
-    }
+  /*
+    Set allowLocalModifications variable, allowing to skip the working copy for local changes
+  */
 
-    /*
-      Get the previously set value for this property
-    */
+  public setAllowLocalModifications(boolean allowLocalModifications) {
+    this.allowLocalModifications = allowLocalModifications
+  }
 
-    public getAllowLocalModifications() {
-        return allowLocalModifications
-    }
+  /*
+    Get the previously set value for this property
+  */
 
-    String tagIt() {
-        return tag ? evaluateAsStringOrClosure(tag) : defaultTag()
-    }
+  public getAllowLocalModifications() {
+    return allowLocalModifications
+  }
 
-    def getTag() {
-        return tag
-    }
+  String tagIt() {
+    return tagName ? evaluateAsStringOrClosure(tagName) : defaultTag()
+  }
 
-    void setTag(tag) {
-        this.tag = tag
-    }
-    
-    private defaultTag() {
-        plugin.getSCMService().getBranchName() + "-RELEASE-" + plugin.project.version
-    }
-    
-    private evaluateAsStringOrClosure(def item) {
-        //allow configuration to accept a plain string or a closure with which to build the tags.
-        return item instanceof Closure ? item() : item
-    }
+  def getTagName() {
+    return tagName
+  }
+
+  void setTagName(tagName) {
+    this.tagName = tagName
+  }
+
+  def getTagRegex() {
+    return tagRegex
+  }
+
+  void setTagRegex(tagRegex) {
+    this.tagRegex = tagRegex
+  }
+
+  private defaultTag() {
+    return plugin.getSCMService().getBranchName() + "-RELEASE-" + plugin.project.version
+  }
+
+  private evaluateAsStringOrClosure(def item) {
+    //allow configuration to accept a plain string or a closure with which to build the tags.
+    return item instanceof Closure ? item() : item
+  }
 }

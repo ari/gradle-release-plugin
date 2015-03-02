@@ -14,26 +14,24 @@
  * limitations under the License.
  */
 
- /* This is a mock service used only for testing */
+/* This is a mock service used only for testing */
 
 package au.com.ish.gradle
 
-import au.com.ish.gradle.SvnService
-import org.gradle.api.Project
 import org.tmatesoft.svn.core.SVNURL
 
 class TestSvnService extends SvnService {
 
-    String remoteURL
+  String remoteURL
 
-    def TestSvnService() {
-    }
+  def TestSvnService() {
+  }
 
-    def SVNURL getSCMRemoteURL() {
-        return SVNURL.parseURIEncoded(remoteURL)
-    }
+  def SVNURL getSCMRemoteURL() {
+    return SVNURL.parseURIEncoded(remoteURL)
+  }
 
-    def setSCMRemoteURL(String remoteURL) {
-        this.remoteURL = remoteURL
-    }
+  def setSCMRemoteURL(String remoteURL) {
+    this.remoteURL = remoteURL
+  }
 }

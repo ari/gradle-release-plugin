@@ -16,67 +16,52 @@
 package au.com.ish.gradle
 
 abstract public class SCMService {
-	protected final def releaseTagPattern = ~/^(\S+)-REL-(\d+)$/
+  /*
+      Used to determine whether or not a given item is a release tag or not.
+   */
+  def releaseTagPattern = ~/^*?-RELEASE-*?$/
 
-	/*
-		Are we on a tag or a normal branch
-	*/
-	def abstract boolean onTag()
+  /*
+      Are we on a tag or a normal branch
+  */
 
-	/*
-		The name of the current branch we are on. For svn, this is just the last part of the path to the repo
-	*/
-	def abstract String getBranchName()
+  def abstract boolean onTag()
 
-	/*
-		A string which represents the SCM commit we are currently on
-	*/
-	def abstract String getSCMVersion()
+  /*
+      The name of the current branch we are on. For svn, this is just the last part of the path to the repo
+  */
 
-	/*
-		The highest release tag in the repository for this branch. For example if the current branch is "master"
-		and we have tags called 'master-RELEASE-1' and 'master-RELEASE-2' then this will return 'master-RELEASE-2'
-	*/
-	def abstract String getLatestReleaseTag(String currentBranch)
+  def abstract String getBranchName()
 
-	/*
-		Return true if the local checkout has changes which aren't in the remote repository
-	*/
-	def abstract boolean localIsAheadOfRemote()
+  /*
+      A string which represents the SCM commit we are currently on
+  */
 
-	/*
-		Return true if there are local changes not committed
-	*/
-	def abstract boolean hasLocalModifications()
+  def abstract String getSCMVersion()
 
-	/*
-		Return true if we don't have all the changes from the remote repository
-	*/
-	def abstract boolean remoteIsAheadOfLocal()
+  /*
+      Return true if the local checkout has changes which aren't in the remote repository
+  */
 
-	/*
-		Create the tag
-	*/
-	def abstract performTagging(String tag, String message)
+  def abstract boolean localIsAheadOfRemote()
 
-	/*
-		Increment the last tag in the repository in order to get the next version to create if the user hasn't supplied one
-	*/
-	def getNextVersion() {
-        def currentBranch = getBranchName()
+  /*
+      Return true if there are local changes not committed
+  */
 
-        def latestReleaseTag = getLatestReleaseTag(currentBranch)
+  def abstract boolean hasLocalModifications()
 
-        if (latestReleaseTag) {
-	        def tagNameParts = latestReleaseTag.split('-').toList()
-	        def currentVersion = tagNameParts[-1]
-	        return project.release.versionStrategy.call(currentVersion)
+  /*
+      Return true if we don't have all the changes from the remote repository
+  */
 
-        } else {
-            return project.release.startVersion.call(currentBranch)
-        }
-    }
+  def abstract boolean remoteIsAheadOfLocal()
 
+  /*
+      Create the tag
+  */
+
+  def abstract performTagging(String tag, String message)
 
 
 }
