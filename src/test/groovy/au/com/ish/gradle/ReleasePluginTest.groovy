@@ -94,37 +94,13 @@ class ReleasePluginTest {
 
     project.version = "not a real version, should get the right one from context"
     initializePlugin([scm     : "test",
-                      tagName     : {
-                        "do something with" + project.version
+                      tagName     : {branch, version ->
+                        "do something with $version"
                       }
     ])
 
     runAllTasksForRelease()
-    assert 'do something withxyz-SNAPSHOT-#0000 Release xyz-SNAPSHOT from branch xyz' == findTagInService()
-  }
-
-  @Test
-  public void testTagWithTagRegexAndGit() {
-    initializePlugin([scm     : "testGit",
-                      tagName     : {
-                        "REL_TAG-$project.version"
-                      },
-                      tagRegex: ~/^(\S*)TAG(\S*)$/
-    ])
-    runAllTasksForRelease()
-    assert !findTagInService() //if on tag, no tagging performed
-  }
-
-  @Test
-  public void testTagWithTagRegexAndGitBadRegex() {
-    initializePlugin([scm     : "testGit",
-                      tagName     : {
-                        "REL-$project.version"
-                      },
-                      tagRegex: ~/^(\S+)NOT-(\d+)$/
-    ])
-    runAllTasksForRelease()
-    assert findTagInService() == "REL-$project.version"
+    assert 'do something with xyz-SNAPSHOT-#0000 Release xyz-SNAPSHOT from branch xyz' == findTagInService()
   }
 
   private runAllTasksForRelease() {

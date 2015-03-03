@@ -16,10 +16,7 @@
 package au.com.ish.gradle
 
 abstract public class SCMService {
-  /*
-      Used to determine whether or not a given item is a release tag or not.
-   */
-  def releaseTagPattern = ~/^*?-RELEASE-*?$/
+
 
   /*
       Are we on a tag or a normal branch

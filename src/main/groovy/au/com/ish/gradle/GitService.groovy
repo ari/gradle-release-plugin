@@ -45,13 +45,7 @@ class GitService extends SCMService {
   }
 
   def boolean onTag() {
-    try {
-      if (releaseTagPattern.matcher(tagNameOnCurrentRevision()).matches()) {
-        return true
-      }
-    } catch (Exception e) {
-    }
-    return false
+    return tagNameOnCurrentRevision() as boolean
   }
 
   def String getBranchName() {
@@ -84,8 +78,7 @@ class GitService extends SCMService {
 
   /*
       Get the name of the most recent tag related to the branch we are on.
-      It will have a strange name like v1.0.4-14-g2414721 if we aren't actually
-      on the tag right now.
+      It will throw an error if we are not on a tag and return null for the tag name.
   */
 
   protected String tagNameOnCurrentRevision() {

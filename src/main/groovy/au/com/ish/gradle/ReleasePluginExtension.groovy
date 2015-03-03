@@ -27,8 +27,10 @@ class ReleasePluginExtension {
   private String password
   private boolean releaseDryRun = false
   private boolean allowLocalModifications = false
-  private def tagName
-  private def tagRegex
+  private def tagName = {branch, version ->
+    "$branch-RELEASE-$version"
+  }
+
 
 
   public ReleasePluginExtension(ReleasePlugin plugin) {
@@ -155,7 +157,7 @@ class ReleasePluginExtension {
   }
 
   String tagIt() {
-    return tagName ? evaluateAsStringOrClosure(tagName) : defaultTag()
+    return evaluateAsStringOrClosure(tagName)
   }
 
   def getTagName() {
@@ -166,20 +168,9 @@ class ReleasePluginExtension {
     this.tagName = tagName
   }
 
-  def getTagRegex() {
-    return tagRegex
-  }
-
-  void setTagRegex(tagRegex) {
-    this.tagRegex = tagRegex
-  }
-
-  private defaultTag() {
-    return plugin.getSCMService().getBranchName() + "-RELEASE-" + plugin.project.version
-  }
 
   private evaluateAsStringOrClosure(def item) {
     //allow configuration to accept a plain string or a closure with which to build the tags.
-    return item instanceof Closure ? item() : item
+    return item instanceof Closure ? item(plugin.getSCMService().getBranchName(), plugin.project.version) : item
   }
 }

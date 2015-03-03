@@ -114,7 +114,6 @@ class ReleasePlugin implements Plugin<Project> {
       throw new GradleException("Your value of scm = '${project.release.scm}' is invalid. Possible options are 'git' or 'svn'")
     }
     scmService = c.newInstance(project)
-    scmService.releaseTagPattern = project.release.tagRegex ?: scmService.releaseTagPattern
     return scmService
   }
 
