@@ -51,8 +51,8 @@ repositories {
 
 dependencies {
 	compile gradleApi()
-	compile 'org.tmatesoft.svnkit:svnkit:1.8.5'
-	compile 'org.eclipse.jgit:org.eclipse.jgit:3.4.1.201406201815-r'
+	compile 'org.tmatesoft.svnkit:svnkit:1.8.7'
+	compile 'org.eclipse.jgit:org.eclipse.jgit:3.7.0.201502260915-r'
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
@@ -132,5 +132,5 @@ uploadArchives.repositories.mavenDeployer {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.11'
+    gradleVersion = '2.3'
 }
