@@ -15,8 +15,6 @@
  */
 package au.com.ish.gradle
 
-import au.com.ish.gradle.ReleasePlugin
-
 class ReleasePluginExtension {
   private boolean failOnSnapshotDependencies = true
 
@@ -29,6 +27,11 @@ class ReleasePluginExtension {
   private String password
   private boolean releaseDryRun = false
   private boolean allowLocalModifications = false
+  private def tagName = {branch, version ->
+    "$branch-RELEASE-$version"
+  }
+
+
 
   public ReleasePluginExtension(ReleasePlugin plugin) {
     this.plugin = plugin
@@ -41,6 +44,7 @@ class ReleasePluginExtension {
     2. If the version control system is currently pointing to a tag, then use a version derived from the name of the tag
     3. Use the name of the branch (or trunk/head) as the version appended with "-SNAPHOT"
   */
+
   public getProjectVersion() {
     return plugin.projectVersion
   }
@@ -48,23 +52,26 @@ class ReleasePluginExtension {
   /*
     Read only property for getting the version which the source control system is pointing to.
   */
+
   public String getScmVersion() {
-  	return plugin.getSCMVersion()
+    return plugin.getSCMVersion()
   }
 
   /*
     Get the previously set value for this property
   */
+
   public boolean getFailOnSnapshotDependencies() {
-  	return failOnSnapshotDependencies
+    return failOnSnapshotDependencies
   }
 
   /*
     A configurable option which defaults to true. Will fail the release task if any dependency is
     currently pointing to a SNAPSHOT
   */
+
   public setFailOnSnapshotDependencies(boolean failOnSnapshotDependencies) {
-  	this.failOnSnapshotDependencies = failOnSnapshotDependencies
+    this.failOnSnapshotDependencies = failOnSnapshotDependencies
   }
 
   /*
@@ -72,6 +79,7 @@ class ReleasePluginExtension {
     * svn
     * git
   */
+
   public setScm(String scm) {
     this.scm = scm
   }
@@ -79,6 +87,7 @@ class ReleasePluginExtension {
   /*
     Get the previously set value for this property
   */
+
   public getScm() {
     return scm
   }
@@ -86,6 +95,7 @@ class ReleasePluginExtension {
   /*
     Define the scm username
   */
+
   public setUsername(String username) {
     this.username = username
   }
@@ -93,6 +103,7 @@ class ReleasePluginExtension {
   /*
     Get the previously set value for this property
   */
+
   public getUsername() {
     return username
   }
@@ -100,6 +111,7 @@ class ReleasePluginExtension {
   /*
     Define the scm password
   */
+
   public setPassword(String password) {
     this.password = password
   }
@@ -107,6 +119,7 @@ class ReleasePluginExtension {
   /*
     Get the previously set value for this property
   */
+
   public getPassword() {
     return password
   }
@@ -114,13 +127,15 @@ class ReleasePluginExtension {
   /*
     Set simulate variable, releaseDryRun == true means no actual commit to the scm
   */
+
   public setReleaseDryRun(boolean releaseDryRun) {
-    this.releaseDryRun=releaseDryRun
+    this.releaseDryRun = releaseDryRun
   }
 
   /*
     Get the previously set value for this property
   */
+
   public getReleaseDryRun() {
     return releaseDryRun
   }
@@ -128,15 +143,34 @@ class ReleasePluginExtension {
   /*
     Set allowLocalModifications variable, allowing to skip the working copy for local changes
   */
+
   public setAllowLocalModifications(boolean allowLocalModifications) {
-    this.allowLocalModifications=allowLocalModifications
+    this.allowLocalModifications = allowLocalModifications
   }
 
   /*
     Get the previously set value for this property
   */
+
   public getAllowLocalModifications() {
     return allowLocalModifications
   }
 
+  String tagIt() {
+    return evaluateAsStringOrClosure(tagName)
+  }
+
+  def getTagName() {
+    return tagName
+  }
+
+  void setTagName(tagName) {
+    this.tagName = tagName
+  }
+
+
+  private evaluateAsStringOrClosure(def item) {
+    //allow configuration to accept a plain string or a closure with which to build the tags.
+    return item instanceof Closure ? item(plugin.getSCMService().getBranchName(), plugin.project.version) : item
+  }
 }

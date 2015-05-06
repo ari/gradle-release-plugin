@@ -16,76 +16,116 @@
 
 package au.com.ish.gradle
 
-import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.Task
-import org.gradle.api.tasks.Exec;
-
-import org.junit.Test
-import org.junit.Before
-import static org.junit.Assert.*
-
 import org.gradle.testfixtures.ProjectBuilder
-
-import au.com.ish.gradle.*
-
-import groovy.mock.interceptor.*
-import org.tmatesoft.svn.core.SVNException
+import org.junit.Before
+import org.junit.Test
 
 class ReleasePluginTest {
 
-	private Project project
-	private Project childProject
-	
-	@Before
-	public void setUp() {
-		project = ProjectBuilder.builder().build()
-		project.task("clean") // a clean task is needed for the plugin to work
-		project.task("build") // also build
-		
-		childProject = ProjectBuilder.builder().withParent(project).build()
+  private Project project
+  private Project childProject
 
-		project.allprojects {
-			project.apply plugin: 'release'
-			release {
-				scm = "test"
-			}
-			version = release.projectVersion
-		}
-	}
+  @Before
+  public void setUp() {
+    project = ProjectBuilder.builder().build()
+    project.task("clean") // a clean task is needed for the plugin to work
+    project.task("build") // also build
 
-	@Test
-	public void releasePluginAddsReleaseTaskToProject() {
-		assert project.tasks.release != null
-	}
+    childProject = ProjectBuilder.builder().withParent(project).build()
+  }
 
-	@Test
-	public void releaseVersionIsValid() {
-		assert project.version == "xyz-SNAPSHOT"
-	}
+  @Test
+  public void releasePluginAddsReleaseTaskToProject() {
+    initializePlugin()
+    assert project.tasks.release != null
+  }
 
-	@Test
-	public void childReleaseVersionIsValid() {
-		assert childProject.version == "xyz-SNAPSHOT"
-	}
+  @Test
+  public void releaseVersionIsValid() {
+    initializePlugin()
+    assert project.version == "xyz-SNAPSHOT"
+  }
 
-	@Test
-	public void checkSCMversion() {
-		assert project.release.scmVersion == "abc"
-	}
+  @Test
+  public void childReleaseVersionIsValid() {
+    initializePlugin()
+    assert childProject.version == "xyz-SNAPSHOT"
+  }
 
-	//verifies if the exec env is available
-	@Test
-	public void testExec() {
-		def stdout = new ByteArrayOutputStream()
+  @Test
+  public void checkSCMversion() {
+    initializePlugin()
+    assert project.release.scmVersion == "abc"
+  }
 
-        project.exec {
-            executable = 'env'
+  //verifies if the exec env is available
+  @Test
+  public void testExec() {
+    initializePlugin()
+    def stdout = new ByteArrayOutputStream()
+    project.exec {
+      executable = 'env'
+    }
+    if (stdout.toByteArray().length > 0) {
+      println stdout.toString()
+    }
+  }
+
+  @Test
+  public void testNoTag() {
+    initializePlugin()
+    runAllTasksForRelease()
+    assert 'xyz-RELEASE-xyz-SNAPSHOT-#0000 Release xyz-SNAPSHOT from branch xyz' == findTagInService()
+
+  }
+
+  @Test
+  public void testTagAsString() {
+    initializePlugin([scm     : "test",
+                      tagName     : "release TAG"
+    ])
+    runAllTasksForRelease()
+    assert 'release TAG-#0000 Release xyz-SNAPSHOT from branch xyz' == findTagInService()
+  }
+
+  @Test
+  public void testTagAsClosure() {
+
+    project.version = "not a real version, should get the right one from context"
+    initializePlugin([scm     : "test",
+                      tagName     : {branch, version ->
+                        "do something with $version"
+                      }
+    ])
+
+    runAllTasksForRelease()
+    assert 'do something with xyz-SNAPSHOT-#0000 Release xyz-SNAPSHOT from branch xyz' == findTagInService()
+  }
+
+  private runAllTasksForRelease() {
+    project.tasks.find({ it.name == 'release' }).actions.each({ it.execute(project.tasks.release) })
+
+  }
+
+  private findTagInService() {
+    //groovy magic to get at fields within private properties
+    project.plugins.getPlugin('release').properties.get('SCMService').tag
+
+  }
+
+  private initializePlugin(Map releaseOptions = [scm: "test"]) {
+    project.allprojects {
+      project.apply plugin: 'release'
+      release {
+        releaseOptions.each { key, value ->
+          release[key] = value
         }
+      }
+      version = release.projectVersion
+    }
 
-        if (stdout.toByteArray().length > 0) {
-            println stdout.toString()
-        } 
-	}
+  }
+
 
 }

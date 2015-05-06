@@ -4,7 +4,10 @@ before_install:
  - sudo apt-get update -qq
  - sudo apt-get install -qq git
 
-jdk:
-  - oraclejdk7
+install:
+ - ./gradlew --stacktrace --debug assemble
 
-script: "./gradlew test"
+jdk:
+  - oraclejdk8
+
+script: "./gradlew test --stacktrace --debug"

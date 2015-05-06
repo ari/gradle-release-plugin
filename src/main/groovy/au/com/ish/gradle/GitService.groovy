@@ -15,104 +15,89 @@
  */
 package au.com.ish.gradle
 
-import org.gradle.api.Project
-import org.gradle.api.tasks.Exec
-
-import au.com.ish.gradle.SCMService
 import org.gradle.api.GradleException
+import org.gradle.api.Project
 import org.gradle.process.internal.ExecException
 
 class GitService extends SCMService {
 
-    def private Project project
+  def private Project project
 
-    def GitService(Project project) {
-        this.project = project;
+  def GitService(Project project) {
+    this.project = project;
+  }
+
+  def boolean localIsAheadOfRemote() {
+    gitExec(['status']).contains('Your branch is ahead')
+  }
+
+  def boolean hasLocalModifications() {
+    gitExec(['status', '--porcelain']) == true
+  }
+
+  def boolean remoteIsAheadOfLocal() {
+    return false
+    //TODO requires implementation
+  }
+
+  String getSCMVersion() {
+    return "abc" //TODO: implement
+  }
+
+  def boolean onTag() {
+    return tagNameOnCurrentRevision() as boolean
+  }
+
+  def String getBranchName() {
+    if (onTag()) {
+      return tagNameOnCurrentRevision()
     }
 
-    def boolean localIsAheadOfRemote() {
-        gitExec(['status']).contains('Your branch is ahead')
+    def refName = gitExec(['symbolic-ref', '-q', 'HEAD']).replaceAll("\\n", "")
+
+    if (!refName) {
+      throw new GradleException('Could not determine the current branch name.');
+    } else if (!refName.startsWith('refs/heads/')) {
+      throw new GradleException('Checkout the branch to release from.');
     }
 
-    def boolean hasLocalModifications() {
-        gitExec(['status', '--porcelain']) == true
+    def prefixLength = 'refs/heads/'.length()
+    def branchName = refName[prefixLength..-1]
+
+    return branchName.replaceAll('[^\\w\\.\\-\\_]', '_')
+  }
+
+  def performTagging(String tag, String message) {
+    try {
+      gitExec(['tag', '-a', tag, '-m', message])
+      gitExec(['push', '--tags'])
+    } catch (ExecException e) {
+      throw new GradleException("Failed to create or push the git tag ${tag}")
+    }
+  }
+
+  /*
+      Get the name of the most recent tag related to the branch we are on.
+      It will throw an error if we are not on a tag and return null for the tag name.
+  */
+
+  protected String tagNameOnCurrentRevision() {
+    gitExec(['describe', '--exact-match', 'HEAD']).replaceAll("\\n", "")
+  }
+
+  def protected gitExec(List gitArgs) {
+    def stdout = new ByteArrayOutputStream()
+
+    project.exec {
+      executable = 'git'
+      args = gitArgs
+      standardOutput = stdout
     }
 
-    def boolean remoteIsAheadOfLocal() {
-        return false
-        //TODO requires implementation
+    if (stdout.toByteArray().length > 0) {
+      return stdout.toString()
+    } else {
+      return null
     }
-
-    def String getLatestReleaseTag(String currentBranch) {
-        def tagSearchPattern = "${currentBranch}-REL-*"
-
-        gitExec(['for-each-ref', '--count=1', "--sort=-taggerdate",
-            "--format=%(refname:short)", "refs/tags/${tagSearchPattern}"])
-    }
-
-    String getSCMVersion() {
-        return "abc" //TODO: implement
-    }
-
-    def boolean onTag() {
-        try {
-            if (releaseTagPattern.matcher(tagNameOnCurrentRevision()).matches()) {
-                return true
-            }
-        } catch (Exception e) {}
-        return false
-    }
-
-    def String getBranchName() {
-        if (onTag()) {
-            return tagNameOnCurrentRevision()
-        }
-
-        def refName = gitExec(['symbolic-ref', '-q', 'HEAD']).replaceAll("\\n", "")
-
-        if (!refName) {
-            throw new GradleException('Could not determine the current branch name.');
-        } else if (!refName.startsWith('refs/heads/')) {
-            throw new GradleException('Checkout the branch to release from.');
-        }
-
-        def prefixLength = 'refs/heads/'.length()
-        def branchName = refName[prefixLength..-1]
-
-        return branchName.replaceAll('[^\\w\\.\\-\\_]', '_')
-    }
-
-    def performTagging(String tag, String message) {
-        try {                
-            gitExec(['tag', '-a', tag, '-m', message])
-            gitExec(['push', '--tags'])
-        } catch (ExecException e) {
-            throw new GradleException("Failed to create or push the git tag ${tag}")
-        }
-    }
-
-    /*
-        Get the name of the most recent tag related to the branch we are on.
-        It will have a strange name like v1.0.4-14-g2414721 if we aren't actually
-        on the tag right now.
-    */
-    private String tagNameOnCurrentRevision() {
-        gitExec(['describe', '--exact-match', 'HEAD']).replaceAll("\\n", "")
-    }
-
-    def private gitExec(List gitArgs) {
-        def stdout = new ByteArrayOutputStream()
-
-        project.exec {
-            executable = 'git'
-            args = gitArgs
-            standardOutput = stdout
-        }
-
-        if (stdout.toByteArray().length > 0) {
-            return stdout.toString()
-        } else {
-            return null
-        }
-    }
+  }
 }

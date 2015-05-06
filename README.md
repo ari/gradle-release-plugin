@@ -1,6 +1,6 @@
 # Gradle release plugin
 
-[![Build Status](http://travis-ci.org/ari/gradle-release-plugin.png)](http://travis-ci.org/ari/gradle-release-plugin)
+[![Build Status](https://travis-ci.org/leo-guinan/gradle-release-plugin.svg)](https://travis-ci.org/leo-guinan/gradle-release-plugin)
 
 Gradle releases made easy. Other release processes force you to store your versioning information inside the project files such as build.gradle; this plugin keeps versions where they belong, in your version control system. We currently support subversion or git. Additional SCM choices are easy to add.
 
@@ -26,11 +26,8 @@ At any time you can override the version number on the command line:
 
 ### 2. Release tagging
 
-Just run this to have the plugin automatically guess the next available version number, and create a tag in your version control system of choice.
+Run this to set the release version and create a tag in your version control system of choice.
 
-     gradle release
-
-Or this if you want to set the release version yourself.
 
      gradle release -PreleaseVersion=4.1.2
 
@@ -63,6 +60,9 @@ release {
   scm = 'svn'
   username = 'fred'
   password = 'secret01'
+  tagName = { branch, version ->
+    "use the $version within a tag like this or the $branch"
+  }
 }
 version = release.projectVersion
 ````
@@ -78,6 +78,7 @@ The options avilable are:
 * username: a username for your version control system. This is mostly useful for running releases from a continuous integration server like Jenkins. If you don't pass this, the release plugin will take credentials from any cached on your system or prompt you for them.
 * password: a password to match the username
 * scmRoot: The path to your version control repository. This is not needed if you have a simple checkout of the trunk path and only one gradle project beneath that. Some people have different layouts and this hint is needed so that the release plugin knows where to make tags and look for branches. Only used for subversion.
+* tagName: Specify how you want the tag to be built. Can be a string or a closure that can build the tag. As a closure, offers two parameters, the branch, and the current version.
 
 ### Properties
 
