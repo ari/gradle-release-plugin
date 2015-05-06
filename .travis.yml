@@ -8,6 +8,6 @@ install:
  - ./gradlew --stacktrace --debug assemble
 
 jdk:
-  - oraclejdk7
+  - oraclejdk8
 
 script: "./gradlew test --stacktrace --debug"
