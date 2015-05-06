@@ -7,4 +7,4 @@ before_install:
 jdk:
   - oraclejdk7
 
-script: "./gradlew test"
+script: "./gradlew test --stacktrace --debug"
