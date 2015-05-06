@@ -1,6 +1,6 @@
 # Gradle release plugin
 
-[![Build Status](http://travis-ci.org/ari/gradle-release-plugin.png)](http://travis-ci.org/ari/gradle-release-plugin)
+[![Build Status](https://travis-ci.org/leo-guinan/gradle-release-plugin.svg)](https://travis-ci.org/leo-guinan/gradle-release-plugin)
 
 Gradle releases made easy. Other release processes force you to store your versioning information inside the project files such as build.gradle; this plugin keeps versions where they belong, in your version control system. We currently support subversion or git. Additional SCM choices are easy to add.
 
