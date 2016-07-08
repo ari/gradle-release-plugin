@@ -52,7 +52,8 @@ repositories {
 dependencies {
 	compile gradleApi()
 	compile 'org.tmatesoft.svnkit:svnkit:1.8.12'
-	compile 'org.eclipse.jgit:org.eclipse.jgit:3.7.0.201502260915-r'
+	compile 'org.eclipse.jgit:org.eclipse.jgit:4.4.0.201606070830-r'
+	testCompile 'junit:junit:4.12'
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
