@@ -118,15 +118,6 @@ uploadArchives.repositories.mavenDeployer {
 				}
 				timezone '+10'
 			}
-			developer {
-				id 'marcin'
-				name 'Marcin Skladaniec'
-				email 'marcin@ish.com.au'
-				roles {
-					role 'Developer'
-				}
-				timezone '+10'
-			}
 		}
 	}
 }
