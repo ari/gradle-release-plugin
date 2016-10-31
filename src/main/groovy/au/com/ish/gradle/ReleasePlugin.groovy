@@ -78,6 +78,16 @@ class ReleasePlugin implements Plugin<Project> {
 
         releaseTask.description = "Release the project by setting a final non-snapshot version, building and creating a tag."
     }
+    
+    def String getMessage(project, extension) {
+        Closure message = extension.getMessage();
+        
+        if(message != null) {
+            return message.call();
+        } else {
+            return "#0000 Release ${project.version} from branch ${getSCMService().getBranchName()}"
+        }
+    }
 
     def String getProjectVersion() {
         project.logger.debug("release version specified? "+hasProperty('releaseVersion'))

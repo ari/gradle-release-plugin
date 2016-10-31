@@ -49,6 +49,7 @@ class ReleasePluginTest {
 			project.apply plugin: 'release'
 			release {
 				scm = "test"
+				message = {"Version: ${project.version}"}
 			}
 			version = release.projectVersion
 		}
@@ -72,6 +73,12 @@ class ReleasePluginTest {
 	@Test
 	public void checkSCMversion() {
 		assert project.release.scmVersion == "abc"
+	}
+	
+	@Test
+	public void checkCustomMessage() {
+		def message = project.release.getMessage().call();
+		assert message == "Version: xyz-SNAPSHOT";
 	}
 
 }
