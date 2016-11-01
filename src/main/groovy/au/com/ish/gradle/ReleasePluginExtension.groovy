@@ -24,6 +24,7 @@ class ReleasePluginExtension {
   private String password
   private boolean releaseDryRun = false
   private boolean allowLocalModifications = false
+  private Closure message
 
   public ReleasePluginExtension(ReleasePlugin plugin) {
     this.plugin = plugin
@@ -132,6 +133,20 @@ class ReleasePluginExtension {
   */
   public getAllowLocalModifications() {
     return allowLocalModifications
+  }
+
+  /*
+    Sets the commit message to be used.
+  */
+  public setMessage(Closure message) {
+  	this.message = message;
+  }
+ 
+  /*
+    Get the commit message.
+  */
+  public Closure getMessage() {
+    return this.message;
   }
 
 }

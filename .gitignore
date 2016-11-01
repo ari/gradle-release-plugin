@@ -2,3 +2,7 @@ build
 .gradle
 .idea
 release.iml
+/bin/
+.classpath
+.project
+.settings/
