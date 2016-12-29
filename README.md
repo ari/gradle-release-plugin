@@ -6,6 +6,10 @@ Gradle releases made easy. Other release processes force you to store your versi
 
 This plugin doesn't try to take over your release management process. Maven's release plugin will create two or three commits, alter the pom twice and have a number of unusual side effects. Instead, this plugin does two simple and clear things:
 
+## Other similar plugins
+
+Because this plugin hasn't been worked on for a while, you might like to take a look at https://github.com/IntershopCommunicationsAG/scmversion-gradle-plugin which has similar goals with regard to generating a version number from the branch structure. I haven't used it, but it looks nice.
+
 
 ## What this plugin does
 
